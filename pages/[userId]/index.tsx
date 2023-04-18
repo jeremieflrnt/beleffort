@@ -42,8 +42,12 @@ export default UserPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req } = context;
-
   const sessionToken = req.cookies['next-auth.session-token'];
+
+  if (!sessionToken)
+    return {
+      notFound: true,
+    };
 
   const user = await prisma.user.findFirstOrThrow({
     where: {
