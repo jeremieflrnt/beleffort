@@ -65,7 +65,7 @@ const NavBar = () => {
   }
   return (
     <>
-      <div className="navbar bg-base-100 2xl:px-10">
+      <div className="navbar bg-base-100 2xl:container 2xl:mx-auto 2xl:px-10">
         {right}
         {left}
       </div>
