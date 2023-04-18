@@ -218,13 +218,12 @@ export default LiftPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { params, req } = context;
-
-  if (!params?.liftId)
-    return {
-      notFund: true,
-    };
-
   const sessionToken = req.cookies['next-auth.session-token'];
+
+  if (!params?.liftId || !sessionToken)
+    return {
+      notFound: true,
+    };
 
   const userIdSession = await prisma.session.findFirst({
     where: {
