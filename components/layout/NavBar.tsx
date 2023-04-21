@@ -31,13 +31,23 @@ const NavBar = () => {
     const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
     right = (
       <div className="flex-1">
-        <Link className="btn-ghost btn text-xl normal-case" href={`/${slugifiedName}`}>
+        <Link className="btn-ghost btn text-xl normal-case" href={`/`}>
           BelEffort
         </Link>
       </div>
     );
     left = (
       <div className="flex-none">
+        {/* <Link className="btn-ghost btn text-xl normal-case" href={`/${slugifiedName}`}>
+          My page
+        </Link> */}
+        <ul className="menu menu-horizontal px-1">
+          <li>
+            <Link className="" href={`/${slugifiedName}`}>
+              My page
+            </Link>
+          </li>
+        </ul>
         <div className="dropdown-end dropdown">
           <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
             <div className="w-10">
@@ -65,9 +75,11 @@ const NavBar = () => {
   }
   return (
     <>
-      <div className="navbar bg-base-100 2xl:container 2xl:mx-auto 2xl:px-10">
-        {right}
-        {left}
+      <div className="navbar bg-base-100 2xl:px-10">
+        <div className="w-full  2xl:container 2xl:mx-auto">
+          {session && right}
+          {left}
+        </div>
       </div>
       <Settings open={openModalSettings} onClose={handleToggleModalSettings} onSubmit={() => {}} />
     </>

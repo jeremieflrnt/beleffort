@@ -22,6 +22,11 @@ div#__next {
   @apply flex-col;
 }
 
+:where(.navbar > * > *) {
+  display: inline-flex;
+  align-items: center;
+}
+
 .stats-like {
   display: inline-grid;
   --tw-bg-opacity: 1;
