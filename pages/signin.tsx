@@ -13,7 +13,10 @@ function Signin(props: Props) {
     <>
       <Head>
         <title>BelEffort - Sign in!</title>
-        <meta name="description" content="BelEffort - Sign in!" />
+        <meta
+          name="description"
+          content="BelEffort - Sign in with Google or GitHub to Unlock a World of Weightlifting Excellence"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
