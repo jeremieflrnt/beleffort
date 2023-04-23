@@ -1,10 +1,12 @@
 import { isValidMovement } from '@/components/weightlifting/modals/AddLift';
+import { getSessionToken } from '@/lib/utils';
 import { Lift } from '@/types/Lift';
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'PUT' && !req.cookies['next-auth.session-token']) {
+  const sessionToken = getSessionToken(req);
+  if (req.method !== 'PUT' || !sessionToken) {
     res.status(500).json({ message: 'An error occurred.' });
     return;
   }
@@ -14,9 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const { id, movement } = req.body;
-
   if (isValidMovement(movement)) {
-    const sessionToken = req.cookies['next-auth.session-token'];
     try {
       const foundLift = await prisma.session.findFirstOrThrow({
         where: {

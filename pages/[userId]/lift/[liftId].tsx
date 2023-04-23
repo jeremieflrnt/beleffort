@@ -1,9 +1,11 @@
 import Stat from '@/components/ui/Stat';
 import Stats from '@/components/ui/Stats';
+import Calculator from '@/components/weightlifting/Calculator';
 import SetTabs from '@/components/weightlifting/SetTabs';
 import AddSet from '@/components/weightlifting/modals/AddSet';
 import UpdateLift from '@/components/weightlifting/modals/UpdateLift';
 import UpdateSet from '@/components/weightlifting/modals/UpdateSet';
+import { getSessionToken } from '@/lib/utils';
 import { Lift, Set, SetWithPercentage } from '@/types/Lift';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
@@ -12,7 +14,6 @@ import { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FiInfo } from 'react-icons/fi';
 import prisma from '../../../lib/prisma';
-import Calculator from '@/components/weightlifting/Calculator';
 
 type Props = {
   lift: Lift;
@@ -223,16 +224,7 @@ export default LiftPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { params, req } = context;
-  let sessionToken = '';
-  if (process.env.NODE_ENV === 'production' && process.env.VERCEL === '1') {
-    const secureSessionTokenCookie = req.cookies['__Secure-next-auth.session-token'];
-    if (secureSessionTokenCookie) sessionToken = secureSessionTokenCookie;
-    else console.log('Missing secure session token in cookies');
-  } else {
-    const sessionTokenCookie = req.cookies['next-auth.session-token'];
-    if (sessionTokenCookie) sessionToken = sessionTokenCookie;
-    else console.log('Missing session token in cookies');
-  }
+  const sessionToken = getSessionToken(req);
 
   if (!params?.liftId || !sessionToken)
     return {
