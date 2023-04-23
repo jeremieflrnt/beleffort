@@ -28,7 +28,7 @@ const SetTable = (props: Props) => {
               return (
                 <div className="flex flex-col" key={props.movement + index}>
                   <div className="text-xs ">{set.rep}RM</div>
-                  <div className="flex items-baseline font-extrabold text-neutral">
+                  <div className="flex items-baseline font-extrabold">
                     <div className="text-lg">{set.weight}</div>
                     <div className="text-xs">kg</div>
                   </div>

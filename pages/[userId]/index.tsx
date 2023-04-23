@@ -1,12 +1,11 @@
-import Head from 'next/head';
-import Lifts from '@/components/weightlifting/Lifts';
-import { Lift } from '@/types/Lift';
-import prisma from '../../lib/prisma';
-import { useState } from 'react';
 import PlusSvg from '@/components/svg/Plus';
+import Lifts from '@/components/weightlifting/Lifts';
 import AddLift from '@/components/weightlifting/modals/AddLift';
-import { getSession } from 'next-auth/react';
+import { Lift } from '@/types/Lift';
 import { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
+import { useState } from 'react';
+import prisma from '../../lib/prisma';
 
 const UserPage = (props: any) => {
   const [open, setOpen] = useState(false);
