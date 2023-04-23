@@ -65,7 +65,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           id: true,
           movement: true,
           sets: {
-            orderBy: { updatedAt: 'asc' },
+            distinct: ['rep'],
+            orderBy: { updatedAt: 'desc' },
             select: {
               id: true,
               rep: true,

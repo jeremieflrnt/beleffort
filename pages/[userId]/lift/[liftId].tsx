@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FiInfo } from 'react-icons/fi';
 import prisma from '../../../lib/prisma';
+import Calculator from '@/components/weightlifting/Calculator';
 
 type Props = {
   lift: Lift;
@@ -196,6 +197,7 @@ const LiftPage = (props: Props) => {
               </Stats>
             </>
           )}
+          {activeRep.percentage === 100 && <Calculator weight={activeRep.weight} />}
         </div>
       </div>
       <UpdateSet

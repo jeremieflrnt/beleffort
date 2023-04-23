@@ -27,6 +27,11 @@ const formReducer = (state: FormState, action: FormAction) => {
         value: { isKg: !state.value.isKg },
       };
     }
+    case 'ON_CLOSE': {
+      return {
+        value: { isKg: true },
+      };
+    }
     default: {
       return {
         value: { isKg: true },
@@ -35,7 +40,7 @@ const formReducer = (state: FormState, action: FormAction) => {
   }
 };
 
-const Settings = ({ open, onClose, onSubmit }: Props) => {
+const Settings = (props: Props) => {
   const { data: session, status } = useSession();
 
   const [formState, dispatchForm] = useReducer(formReducer, {
@@ -47,9 +52,9 @@ const Settings = ({ open, onClose, onSubmit }: Props) => {
     dispatchForm({ type: 'ON_SWITCH_KG', value: event.target.value });
   };
 
-  const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickClose = () => {
     dispatchForm({ type: 'ON_CLOSE' });
-    onClose();
+    props.onClose();
   };
 
   const handleOnClickSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -66,14 +71,14 @@ const Settings = ({ open, onClose, onSubmit }: Props) => {
 
       if (res.status === 201 && res.ok) {
         const data = await res.json();
-        onSubmit(data.lifts);
-        onClose();
+        props.onSubmit(data.lifts);
+        props.onClose();
       }
     }
   };
 
   return (
-    <Modal open={open}>
+    <Modal open={props.open}>
       <div className="flex justify-end">
         <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
           <FiX />
