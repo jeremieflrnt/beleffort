@@ -1,9 +1,9 @@
 import { signIn, useSession } from 'next-auth/react';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import bg from 'public/pexels-victor-freitas-791763.jpg';
 import slugify from 'slugify';
-import Image from 'next/image';
 import screenshotWL from './../public/screenshotWL.png';
 
 const HomePage = () => {
@@ -27,7 +27,7 @@ const HomePage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="hero h-[90vh]" style={{ backgroundImage: `url(${bg.src})` }}>
+      <div className="hero h-[85svh]" style={{ backgroundImage: `url(${bg.src})` }}>
         <div className="hero-overlay bg-opacity-60"></div>
         <div className="hero-content text-center text-neutral-content">
           <div className="max-w-md">
@@ -48,7 +48,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-      <div className="hero h-[120vh] bg-slate-700 lg:h-[90vh]">
+      <div className="hero h-[120vh] bg-slate-700 lg:h-[85svh]">
         <div className="hero-content flex-col text-neutral-content lg:flex-row">
           <div className="mockup-phone w-60 sm:w-80">
             <div className="camera"></div>
