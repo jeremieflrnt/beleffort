@@ -1,8 +1,8 @@
 import Modal from '@/components/ui/Modal';
 import { Lift } from '@/types/Lift';
 import { useReducer } from 'react';
-import { isValidMovement, isValidReps, isValidWeight } from './AddLift';
 import { FiX } from 'react-icons/fi';
+import { isValidMovement } from './AddLift';
 
 type Props = {
   lift: Lift;
@@ -90,7 +90,7 @@ const UpdateSet = (props: Props) => {
 
     if (formState.isValid.movement) {
       const res = await fetch('/api/lift/update-lift', {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify({ ...formState.value, id: props.lift.id }),
         headers: {
           'Content-Type': 'application/json',

@@ -1,8 +1,10 @@
+import { getSessionToken } from '@/lib/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'DELETE' && !req.cookies['next-auth.session-token']) {
+  const sessionToken = getSessionToken(req);
+  if (req.method !== 'DELETE' || !sessionToken) {
     res.status(500).json({ message: 'An error occurred.' });
     return;
   }
@@ -13,7 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { id } = req.body;
 
-  const sessionToken = req.cookies['next-auth.session-token'];
   try {
     const set = await prisma.set.delete({
       where: {

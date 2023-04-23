@@ -1,6 +1,7 @@
 import PlusSvg from '@/components/svg/Plus';
 import Lifts from '@/components/weightlifting/Lifts';
 import AddLift from '@/components/weightlifting/modals/AddLift';
+import { getSessionToken } from '@/lib/utils';
 import { Lift } from '@/types/Lift';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
@@ -41,16 +42,7 @@ export default UserPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req } = context;
-  let sessionToken = '';
-  if (process.env.NODE_ENV === 'production' && process.env.VERCEL === '1') {
-    const secureSessionTokenCookie = req.cookies['__Secure-next-auth.session-token'];
-    if (secureSessionTokenCookie) sessionToken = secureSessionTokenCookie;
-    else console.log('Missing secure session token in cookies');
-  } else {
-    const sessionTokenCookie = req.cookies['next-auth.session-token'];
-    if (sessionTokenCookie) sessionToken = sessionTokenCookie;
-    else console.log('Missing session token in cookies');
-  }
+  const sessionToken = getSessionToken(req);
 
   if (!sessionToken)
     return {
