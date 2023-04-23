@@ -223,12 +223,16 @@ export default LiftPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { params, req } = context;
-  console.log('req', req);
-  console.log('req.cookies', req.cookies);
-  console.log('process.env.VERCEL', process.env.VERCEL);
-  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-  const sessionToken = req.cookies['next-auth.session-token'];
-  console.log('sessionToken', sessionToken);
+  let sessionToken = '';
+  if (process.env.NODE_ENV === 'production' && process.env.VERCEL === '1') {
+    const secureSessionTokenCookie = req.cookies['__Secure-next-auth.session-token'];
+    if (secureSessionTokenCookie) sessionToken = secureSessionTokenCookie;
+    else console.log('Missing secure session token in cookies');
+  } else {
+    const sessionTokenCookie = req.cookies['next-auth.session-token'];
+    if (sessionTokenCookie) sessionToken = sessionTokenCookie;
+    else console.log('Missing session token in cookies');
+  }
 
   if (!params?.liftId || !sessionToken)
     return {
