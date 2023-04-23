@@ -29,13 +29,6 @@ const NavBar = () => {
   let left = <></>;
   if (session) {
     const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
-    right = (
-      <div className="flex-1">
-        <Link className="btn-ghost btn text-xl normal-case" href={`/`}>
-          BelEffort
-        </Link>
-      </div>
-    );
     left = (
       <div className="flex-none">
         {/* <Link className="btn-ghost btn text-xl normal-case" href={`/${slugifiedName}`}>
@@ -44,7 +37,7 @@ const NavBar = () => {
         <ul className="menu menu-horizontal px-1">
           <li>
             <Link className="" href={`/${slugifiedName}`}>
-              My page
+              My lifts
             </Link>
           </li>
         </ul>
@@ -77,7 +70,7 @@ const NavBar = () => {
     <>
       <div className="navbar bg-base-100 2xl:px-10">
         <div className="w-full  2xl:container 2xl:mx-auto">
-          {session && right}
+          {right}
           {left}
         </div>
       </div>
