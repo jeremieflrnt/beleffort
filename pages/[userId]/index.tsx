@@ -42,7 +42,10 @@ export default UserPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req } = context;
+  console.log('req', req);
+  console.log('req.cookies', req.cookies);
   const sessionToken = req.cookies['next-auth.session-token'];
+  console.log('sessionToken', sessionToken);
 
   if (!sessionToken)
     return {
@@ -78,13 +81,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     },
   });
+  console.log('user', user);
+  console.log('user.lifts', user.lifts);
 
-  const sets: Lift[] = [];
+  const lifts: Lift[] = [];
   user?.lifts.forEach((lift) => {
-    sets.push(new Lift(lift.id, lift.movement, lift.sets));
+    lifts.push(new Lift(lift.id, lift.movement, lift.sets));
   });
 
   return {
-    props: { lifts: JSON.parse(JSON.stringify(sets)) },
+    props: { lifts: JSON.parse(JSON.stringify(lifts)) },
   };
 }

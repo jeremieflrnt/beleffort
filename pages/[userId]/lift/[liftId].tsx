@@ -223,7 +223,12 @@ export default LiftPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { params, req } = context;
+  console.log('req', req);
+  console.log('req.cookies', req.cookies);
+  console.log('process.env.VERCEL', process.env.VERCEL);
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
   const sessionToken = req.cookies['next-auth.session-token'];
+  console.log('sessionToken', sessionToken);
 
   if (!params?.liftId || !sessionToken)
     return {
