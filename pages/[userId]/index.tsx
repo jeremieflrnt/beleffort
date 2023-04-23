@@ -42,7 +42,16 @@ export default UserPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req } = context;
-  const sessionToken = req.cookies['next-auth.session-token'];
+  let sessionToken = '';
+  if (process.env.NODE_ENV === 'production' && process.env.VERCEL === '1') {
+    const secureSessionTokenCookie = req.cookies['__Secure-next-auth.session-token'];
+    if (secureSessionTokenCookie) sessionToken = secureSessionTokenCookie;
+    else console.log('Missing secure session token in cookies');
+  } else {
+    const sessionTokenCookie = req.cookies['next-auth.session-token'];
+    if (sessionTokenCookie) sessionToken = sessionTokenCookie;
+    else console.log('Missing session token in cookies');
+  }
 
   if (!sessionToken)
     return {
@@ -79,12 +88,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  const sets: Lift[] = [];
+  const lifts: Lift[] = [];
   user?.lifts.forEach((lift) => {
-    sets.push(new Lift(lift.id, lift.movement, lift.sets));
+    lifts.push(new Lift(lift.id, lift.movement, lift.sets));
   });
 
   return {
-    props: { lifts: JSON.parse(JSON.stringify(sets)) },
+    props: { lifts: JSON.parse(JSON.stringify(lifts)) },
   };
 }
