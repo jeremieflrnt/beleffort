@@ -13,7 +13,7 @@ const LiftCard = (props: Props) => {
 
   return (
     <div
-      className="card card-compact w-full cursor-pointer break-inside-avoid-column bg-transparent shadow-xl sm:card-normal"
+      className="card card-compact my-4 w-full cursor-pointer break-inside-avoid-column bg-transparent shadow-xl sm:card-normal"
       onClick={handleOnClick}
     >
       <div className="card-body">

@@ -92,6 +92,9 @@ const LiftPage = (props: Props) => {
   const handleDeleteSet = (data: string) => {
     setLift((prev) => {
       console.log('prev', prev);
+      if (prev.sets.length === 1) {
+        router.push(`/${router.query.userId}`);
+      }
       const updatedSets = prev.sets.filter((set) => set.id !== data);
       return {
         ...prev,
@@ -258,7 +261,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  if (userIdSession !== lift?.ownerId && lift) {
+  if (lift && userIdSession !== lift?.ownerId && lift.sets.length > 0) {
     if (lift.sets[0].rep === 1)
       return {
         props: {
