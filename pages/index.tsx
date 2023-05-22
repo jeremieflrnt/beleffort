@@ -51,7 +51,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-      <div className="hero h-[120vh] bg-slate-700 lg:h-[85svh]">
+      <div className="hero h-[120vh] min-h-fit bg-slate-700 lg:h-[85svh]">
         <div className="hero-content flex-col text-neutral-content lg:flex-row">
           <div className="mockup-phone w-60 sm:w-80">
             <div className="camera !w-4/6"></div>

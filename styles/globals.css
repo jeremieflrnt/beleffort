@@ -7,16 +7,12 @@
 
 html,
 body {
-  @apply h-[100dvh];
+  @apply min-h-[100dvh];
   @apply bg-gradient-to-tl from-base-100 to-base-300;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-}
-
 div#__next {
+  @apply min-h-[100dvh];
   @apply h-full;
   @apply relative;
   @apply flex;

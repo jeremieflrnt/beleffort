@@ -19,9 +19,15 @@ const Lifts = (props: Props) => {
 
   return (
     <>
-      <div className="max-w-screen-lg columns-2 items-center justify-center gap-2 px-5 py-10">
+      <div
+        className={`max-w-screen-lg ${
+          props.lifts.length === 1 ? '' : 'columns-2'
+        } items-center justify-center gap-4 px-5 py-10`}
+      >
         {props.lifts.map((lift) => {
-          return <LiftCard key={lift.id} lift={lift} selected={handleSelected} />;
+          if (lift.sets.length > 0) {
+            return <LiftCard key={lift.id} lift={lift} selected={handleSelected} />;
+          }
         })}
       </div>
     </>
