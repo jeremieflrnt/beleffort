@@ -87,8 +87,13 @@ const UpdateSet = (props: Props) => {
 
   const handleUpdate = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    let initInvalid = false;
+    if (formState.value.movement === '') {
+      dispatchForm({ type: 'ON_BLUR_MOVEMENT', value: formState.value.movement });
+      initInvalid = true;
+    }
 
-    if (formState.isValid.movement) {
+    if (!initInvalid && formState.isValid.movement) {
       const res = await fetch('/api/lift/update-lift', {
         method: 'PUT',
         body: JSON.stringify({ ...formState.value, id: props.lift.id }),
@@ -100,7 +105,7 @@ const UpdateSet = (props: Props) => {
       if (res.status === 200 && res.ok) {
         const data = await res.json();
         props.onSubmit({ ...data });
-        formState.value.movement = '';
+        dispatchForm({ type: 'ON_CLOSE' });
         props.onClose();
       }
     }
@@ -118,6 +123,7 @@ const UpdateSet = (props: Props) => {
     if (res.status === 200 && res.ok) {
       const data = await res.json();
       props.onDelete(data.id);
+      dispatchForm({ type: 'ON_CLOSE' });
       props.onClose();
     }
   };
