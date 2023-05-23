@@ -156,8 +156,21 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
 
   const handleOnClickSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    let initInvalid = false;
+    if (formState.value.movement === '') {
+      dispatchForm({ type: 'ON_BLUR_MOVEMENT', value: formState.value.movement });
+      initInvalid = true;
+    }
+    if (formState.value.reps === '') {
+      dispatchForm({ type: 'ON_BLUR_REPS', value: formState.value.reps });
+      initInvalid = true;
+    }
+    if (formState.value.weight === '') {
+      dispatchForm({ type: 'ON_BLUR_WEIGHT', value: formState.value.weight });
+      initInvalid = true;
+    }
 
-    if (formState.isValid.movement && formState.isValid.reps && formState.isValid.weight) {
+    if (!initInvalid && formState.isValid.movement && formState.isValid.reps && formState.isValid.weight) {
       const res = await fetch('/api/lift/add-lift', {
         method: 'POST',
         body: JSON.stringify({ ...formState.value, email: session?.user?.email }),
@@ -169,6 +182,7 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
       if (res.status === 201 && res.ok) {
         const data = await res.json();
         onSubmit(data.lifts);
+        dispatchForm({ type: 'ON_CLOSE' });
         onClose();
       }
     }

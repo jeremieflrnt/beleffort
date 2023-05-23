@@ -117,7 +117,17 @@ const UpdateSet = (props: Props) => {
 
   const handleOnClickUpdate = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (formState.isValid.weight) {
+    let initInvalid = false;
+    if (formState.value.reps === '') {
+      dispatchForm({ type: 'ON_BLUR_REPS', value: formState.value.reps });
+      initInvalid = true;
+    }
+    if (formState.value.weight === '') {
+      dispatchForm({ type: 'ON_BLUR_WEIGHT', value: formState.value.weight });
+      initInvalid = true;
+    }
+
+    if (!initInvalid && formState.isValid.reps && formState.isValid.weight) {
       const res = await fetch('/api/lift/add-set', {
         method: 'POST',
         body: JSON.stringify({ ...formState.value, id: props.lift.id }),
@@ -129,8 +139,7 @@ const UpdateSet = (props: Props) => {
       if ([200, 201].includes(res.status) && res.ok) {
         const data = await res.json();
         props.onSubmit({ ...data, rep: formState.value.reps });
-        formState.value.reps = '';
-        formState.value.weight = '';
+        dispatchForm({ type: 'ON_CLOSE' });
         props.onClose();
       }
     }
