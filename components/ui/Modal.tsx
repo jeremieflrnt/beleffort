@@ -12,7 +12,7 @@ const Backdrop = () => {
 
 const ModalOverlay = ({ children }: Props) => {
   return (
-    <div className="modal modal-open modal-bottom backdrop-blur-xs sm:modal-middle">
+    <div className="modal modal-open modal-bottom select-none backdrop-blur-xs sm:modal-middle">
       <div className="modal-box relative w-11/12 ">{children}</div>
     </div>
   );

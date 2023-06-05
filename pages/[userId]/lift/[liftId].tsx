@@ -159,7 +159,7 @@ const LiftPage = (props: Props) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="card w-fit max-w-screen-lg break-inside-avoid-column bg-transparent sm:card-normal md:shadow-xl">
+      <div className="card w-fit max-w-screen-lg select-none break-inside-avoid-column bg-transparent sm:card-normal md:shadow-xl">
         <div className="card-body">
           <div className="card-title justify-between">
             <div className="cursor-pointer text-5xl font-extrabold" onClick={handleToggleModalUpdateLift}>
