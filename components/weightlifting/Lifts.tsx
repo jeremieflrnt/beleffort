@@ -22,7 +22,7 @@ const Lifts = (props: Props) => {
       <div
         className={`max-w-screen-lg ${
           props.lifts.length === 1 ? '' : 'columns-2'
-        } items-center justify-center gap-4 px-5 py-10`}
+        } select-none items-center justify-center gap-4 px-5 py-10`}
       >
         {props.lifts.map((lift) => {
           if (lift.sets.length > 0) {
