@@ -8,10 +8,7 @@ import screenshotWL from './../public/screenshotWL.png';
 
 const HomePage = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  if (session) {
-    const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
-  }
+  const { data: session } = useSession();
   const handleGetStarted = () => {
     if (!session) signIn(undefined, { callbackUrl: '/' });
     else {

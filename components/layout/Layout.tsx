@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import Footer from './Footer';
 import NavBar from './NavBar';
 
 type Props = {
@@ -12,7 +11,6 @@ const Layout = (props: Props) => {
 
   return (
     <>
-      {/* {!isHomepage && <NavBar />} */}
       <NavBar />
       <main
         className={`relative flex h-max flex-auto flex-col items-center justify-center ${
@@ -21,7 +19,6 @@ const Layout = (props: Props) => {
       >
         {props.children}
       </main>
-      {/* {isHomepage && <Footer />} */}
     </>
   );
 };

@@ -1,10 +1,10 @@
-import { useSession, signOut, signIn } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import slugify from 'slugify';
 import Settings from '../weightlifting/modals/Settings';
-import { useState } from 'react';
 
 const NavBar = () => {
   const { data: session, status } = useSession();
@@ -31,9 +31,6 @@ const NavBar = () => {
     const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
     left = (
       <div className="flex-none">
-        {/* <Link className="btn-ghost btn text-xl normal-case" href={`/${slugifiedName}`}>
-          My page
-        </Link> */}
         <ul className="menu menu-horizontal px-1">
           <li>
             <Link className="" href={`/${slugifiedName}`}>

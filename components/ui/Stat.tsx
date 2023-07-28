@@ -1,6 +1,3 @@
-// import { Svg } from '@/types/Svg';
-import InfoSvg from '../svg/Info';
-import { FiEdit, FiInfo, FiPlusCircle } from 'react-icons/fi';
 import { useState } from 'react';
 
 type Props = {

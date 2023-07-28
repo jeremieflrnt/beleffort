@@ -1,8 +1,8 @@
 import Modal from '@/components/ui/Modal';
 import { Set, SetWithPercentage } from '@/types/Lift';
-import { useReducer } from 'react';
-import { isValidWeight } from './AddLift';
+import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
+import { isValidWeight } from './AddLift';
 
 type Props = {
   rm: SetWithPercentage;
@@ -72,6 +72,8 @@ const UpdateSet = (props: Props) => {
     },
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleOnChangeWeight = (event: React.FocusEvent<HTMLInputElement>) => {
     dispatchForm({ type: 'ON_CHANGE_WEIGHT', value: event.target.value });
   };
@@ -94,6 +96,9 @@ const UpdateSet = (props: Props) => {
     }
 
     if (!initInvalid && formState.isValid.weight) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       const res = await fetch('/api/lift/update-set', {
         method: 'PUT',
         body: JSON.stringify({ ...formState.value, id: props.rm.id }),
@@ -103,6 +108,9 @@ const UpdateSet = (props: Props) => {
       });
 
       if (res.status === 200 && res.ok) {
+        setIsLoading((prev) => {
+          return !prev;
+        });
         formState.value.weight = '';
         const data = await res.json();
         props.onSubmit(data);
@@ -113,6 +121,9 @@ const UpdateSet = (props: Props) => {
   };
 
   const handleDelete = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    setIsLoading((prev) => {
+      return !prev;
+    });
     const res = await fetch('/api/lift/delete-set', {
       method: 'DELETE',
       body: JSON.stringify({ id: props.rm.id }),
@@ -122,6 +133,9 @@ const UpdateSet = (props: Props) => {
     });
 
     if (res.status === 200 && res.ok) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       formState.value.weight = '';
       const data = await res.json();
       props.onDelete(data.id);
@@ -166,10 +180,12 @@ const UpdateSet = (props: Props) => {
       </div>
       <div className="modal-action justify-between">
         <button onClick={handleDelete} className="btn-ghost btn">
-          Delete this set
+          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+          {!isLoading && 'Delete this set'}
         </button>
         <button onClick={handleUpdate} className="btn-primary btn">
-          Yay!
+          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+          {!isLoading && 'Yay!'}
         </button>
       </div>
     </Modal>

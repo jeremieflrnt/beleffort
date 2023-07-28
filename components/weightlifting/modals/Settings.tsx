@@ -1,8 +1,7 @@
 import { Lift } from '@/types/Lift';
 import { useReducer } from 'react';
-import Modal from '../../ui/Modal';
 import { FiX } from 'react-icons/fi';
-import { useSession } from 'next-auth/react';
+import Modal from '../../ui/Modal';
 
 type Props = {
   open: boolean;
@@ -41,8 +40,6 @@ const formReducer = (state: FormState, action: FormAction) => {
 };
 
 const Settings = (props: Props) => {
-  const { data: session, status } = useSession();
-
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { isKg: true },
   });
@@ -60,21 +57,7 @@ const Settings = (props: Props) => {
   const handleOnClickSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     console.log('formState.value', formState.value);
-    if (false) {
-      const res = await fetch('/api/lift/add-lift', {
-        method: 'POST',
-        body: JSON.stringify({ ...formState.value, email: session?.user?.email }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (res.status === 201 && res.ok) {
-        const data = await res.json();
-        props.onSubmit(data.lifts);
-        props.onClose();
-      }
-    }
+    // TODO
   };
 
   return (

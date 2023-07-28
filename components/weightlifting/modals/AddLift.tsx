@@ -1,8 +1,8 @@
 import { Lift } from '@/types/Lift';
-import { useReducer } from 'react';
-import Modal from '../../ui/Modal';
-import { FiX } from 'react-icons/fi';
 import { useSession } from 'next-auth/react';
+import { useReducer, useState } from 'react';
+import { FiX } from 'react-icons/fi';
+import Modal from '../../ui/Modal';
 
 type Props = {
   open: boolean;
@@ -116,6 +116,8 @@ const formReducer = (state: FormState, action: FormAction) => {
 const AddLift = ({ open, onClose, onSubmit }: Props) => {
   const { data: session, status } = useSession();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { movement: '', reps: '', weight: '' },
     isValid: {
@@ -171,6 +173,9 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
     }
 
     if (!initInvalid && formState.isValid.movement && formState.isValid.reps && formState.isValid.weight) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       const res = await fetch('/api/lift/add-lift', {
         method: 'POST',
         body: JSON.stringify({ ...formState.value, email: session?.user?.email }),
@@ -180,6 +185,9 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
       });
 
       if (res.status === 201 && res.ok) {
+        setIsLoading((prev) => {
+          return !prev;
+        });
         const data = await res.json();
         onSubmit(data.lifts);
         dispatchForm({ type: 'ON_CLOSE' });
@@ -203,13 +211,6 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
               <label htmlFor="movement" className="label">
                 <span className="label-text">Movement?</span>
               </label>
-              {/* <Select
-                className={`basic-single w-full max-w-xs ${formState.isValid.movement ? '' : 'input-error'}`}
-                classNamePrefix="select"
-                defaultValue={movements[0]}
-                name="movements"
-                options={movements}
-              /> */}
               <input
                 id="movement"
                 type="text"
@@ -265,7 +266,8 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
       </div>
       <div className="modal-action">
         <button onClick={handleOnClickSave} className="btn">
-          Yay!
+          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+          {!isLoading && 'Yay!'}
         </button>
       </div>
     </Modal>

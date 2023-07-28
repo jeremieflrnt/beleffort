@@ -17,9 +17,6 @@ const SetTable = (props: Props) => {
             <div className="text-2xl text-success sm:text-3xl md:text-4xl">{oneRm.weight}</div>
             <div className="text-xl sm:text-2xl md:text-3xl">kg</div>
           </div>
-          // <Stats>
-          //   <Stat title="1RM" value={`${oneRm.weight}kg`} desc="Jan 1st"></Stat>
-          // </Stats>
         )}
         {!(oneRm && props.sets.length === 1) && (
           <div className="stats-like my-4 grid grid-flow-row grid-cols-[auto_auto] gap-3 p-2 shadow sm:grid-cols-3 lg:grid-cols-5">

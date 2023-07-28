@@ -1,6 +1,6 @@
 import Modal from '@/components/ui/Modal';
 import { Lift } from '@/types/Lift';
-import { useReducer } from 'react';
+import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import { isValidMovement } from './AddLift';
 
@@ -71,6 +71,8 @@ const UpdateSet = (props: Props) => {
     },
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleOnChangeMovement = (event: React.FocusEvent<HTMLInputElement>) => {
     dispatchForm({ type: 'ON_CHANGE_MOVEMENT', value: event.target.value });
   };
@@ -94,6 +96,9 @@ const UpdateSet = (props: Props) => {
     }
 
     if (!initInvalid && formState.isValid.movement) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       const res = await fetch('/api/lift/update-lift', {
         method: 'PUT',
         body: JSON.stringify({ ...formState.value, id: props.lift.id }),
@@ -103,6 +108,9 @@ const UpdateSet = (props: Props) => {
       });
 
       if (res.status === 200 && res.ok) {
+        setIsLoading((prev) => {
+          return !prev;
+        });
         const data = await res.json();
         props.onSubmit({ ...data });
         dispatchForm({ type: 'ON_CLOSE' });
@@ -112,6 +120,9 @@ const UpdateSet = (props: Props) => {
   };
 
   const handleDelete = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
+    setIsLoading((prev) => {
+      return !prev;
+    });
     const res = await fetch('/api/lift/delete-lift', {
       method: 'DELETE',
       body: JSON.stringify({ id: props.lift.id }),
@@ -121,6 +132,9 @@ const UpdateSet = (props: Props) => {
     });
 
     if (res.status === 200 && res.ok) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       const data = await res.json();
       props.onDelete(data.id);
       dispatchForm({ type: 'ON_CLOSE' });
@@ -158,10 +172,12 @@ const UpdateSet = (props: Props) => {
       </div>
       <div className="modal-action justify-between">
         <button onClick={handleDelete} className="btn-ghost btn">
-          Delete this lift
+          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+          {!isLoading && 'Delete this lift'}
         </button>
         <button onClick={handleUpdate} className="btn-primary btn">
-          Yay!
+          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+          {!isLoading && 'Yay!'}
         </button>
       </div>
     </Modal>

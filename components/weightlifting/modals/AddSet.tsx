@@ -1,8 +1,8 @@
 import Modal from '@/components/ui/Modal';
 import { Lift } from '@/types/Lift';
-import { useReducer } from 'react';
-import { isValidReps, isValidWeight } from './AddLift';
+import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
+import { isValidReps, isValidWeight } from './AddLift';
 
 type Props = {
   lift: Lift;
@@ -93,6 +93,8 @@ const UpdateSet = (props: Props) => {
     },
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleOnChangeReps = (event: React.FocusEvent<HTMLInputElement>) => {
     dispatchForm({ type: 'ON_CHANGE_REPS', value: event.target.value });
   };
@@ -128,6 +130,9 @@ const UpdateSet = (props: Props) => {
     }
 
     if (!initInvalid && formState.isValid.reps && formState.isValid.weight) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       const res = await fetch('/api/lift/add-set', {
         method: 'POST',
         body: JSON.stringify({ ...formState.value, id: props.lift.id }),
@@ -137,6 +142,9 @@ const UpdateSet = (props: Props) => {
       });
 
       if ([200, 201].includes(res.status) && res.ok) {
+        setIsLoading((prev) => {
+          return !prev;
+        });
         const data = await res.json();
         props.onSubmit({ ...data, rep: formState.value.reps });
         dispatchForm({ type: 'ON_CLOSE' });
@@ -201,7 +209,8 @@ const UpdateSet = (props: Props) => {
       </div>
       <div className="modal-action">
         <button onClick={handleOnClickUpdate} className="btn">
-          Yay!
+          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+          {!isLoading && 'Yay!'}
         </button>
       </div>
     </Modal>
