@@ -52,9 +52,9 @@ const HomePage = () => {
         </div>
       </div>
       <div className="hero h-[120vh] min-h-fit bg-slate-700 lg:h-[85svh]">
-        <div className="hero-content flex-col text-neutral-content lg:flex-row">
-          <div className="mockup-phone w-60 sm:w-80">
-            <div className="camera !w-4/6"></div>
+        <div className="hero-content flex-col text-neutral-content lg:max-w-screen-lg lg:flex-row">
+          <div className="mockup-phone w-[70vw] max-w-sm sm:w-[30vw] lg:w-[20vw] xl:w-[30vw]">
+            <div className="camera !w-1/2"></div>
             <div className="display">
               <Image alt="screenshot weightlifting" src={screenshotWL} />
             </div>

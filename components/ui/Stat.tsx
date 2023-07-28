@@ -25,21 +25,6 @@ const Stat = (props: Props) => {
   return (
     <>
       <div className="stat">
-        {/* {props.svg === Svg.Info && (
-          <div className="stat-figure text-secondary" onClick={handleOnClickForTooltip}>
-            <FiInfo size="2em" />
-          </div>
-        )}
-        {props.svg === Svg.PlusCircled && (
-          <div className="stat-figure text-secondary" onClick={props.onClick}>
-            <FiPlusCircle size="2em" />
-          </div>
-        )}
-        {props.svg === Svg.Edit && (
-          <div className="stat-figure text-secondary" onClick={props.onClick}>
-            <FiEdit size="2em" />
-          </div>
-        )} */}
         {props.Svg && props.tooltip && (
           <div className="stat-figure cursor-pointer text-secondary" onClick={handleOnClickForTooltip}>
             {props.Svg}
