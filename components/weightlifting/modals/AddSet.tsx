@@ -1,13 +1,11 @@
-import Modal from '@/components/ui/Modal';
 import { Lift } from '@/types/Lift';
+import { useSession } from 'next-auth/react';
 import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import { isValidReps, isValidWeight } from './AddLift';
-import { useSession } from 'next-auth/react';
 
 type Props = {
   lift: Lift;
-  open: boolean;
   onClose: () => void;
   onSubmit: (data: Lift & { rep: string }) => void;
 };
@@ -157,68 +155,70 @@ const UpdateSet = (props: Props) => {
   };
 
   return (
-    <Modal open={props.open}>
-      <div className="flex justify-end">
-        <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
-          <FiX />
-        </button>
-      </div>
-      <div className="card">
-        <div className="card-body">
-          <h2 className="card-title">Add a new set</h2>
-          <form className="flex flex-col items-center" onSubmit={handleOnClickUpdate}>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="reps" className="label">
-                <span className="label-text">Reps?</span>
-              </label>
-              <label className="input-group">
-                <input
-                  id="reps"
-                  type="number"
-                  min="1"
-                  max="100"
-                  step="1"
-                  placeholder="1"
-                  value={formState.value.reps}
-                  onChange={handleOnChangeReps}
-                  onBlur={handleOnBlurReps}
-                  className={`input-bordered input w-full max-w-xs ${formState.isValid.reps ? '' : 'input-error'}`}
-                />
-                <span>RM</span>
-              </label>
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="weight" className="label">
-                <span className="label-text">Weight?</span>
-              </label>
-              <label className="input-group">
-                <input
-                  id="weight"
-                  type="number"
-                  min="1"
-                  max="1000"
-                  step="0.1"
-                  placeholder="100"
-                  value={formState.value.weight}
-                  onChange={handleOnChangeWeight}
-                  onBlur={handleOnBlurWeight}
-                  className={`input-bordered input w-full max-w-xs ${formState.isValid.weight ? '' : 'input-error'}`}
-                />
-                <span>Kg</span>
-              </label>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div className="modal-action">
-        <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
-          <button onClick={handleOnClickUpdate} className="btn" disabled={isLoading || !session}>
-            {isLoading && <span className="loading loading-dots loading-xs"></span>}
-            {!isLoading && 'Yay!'}
+    <dialog id="modal-add-set" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
+      <form method="dialog" className="modal-box">
+        <div className="flex justify-end">
+          <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
+            <FiX />
           </button>
         </div>
-      </div>
-    </Modal>
+        <div className="card">
+          <div className="card-body">
+            <h2 className="card-title">Add a new set</h2>
+            <form className="flex flex-col items-center" onSubmit={handleOnClickUpdate}>
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="reps" className="label">
+                  <span className="label-text">Reps?</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="reps"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="1"
+                    placeholder="1"
+                    value={formState.value.reps}
+                    onChange={handleOnChangeReps}
+                    onBlur={handleOnBlurReps}
+                    className={`input-bordered input w-full max-w-xs ${formState.isValid.reps ? '' : 'input-error'}`}
+                  />
+                  <span>RM</span>
+                </label>
+              </div>
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="weight" className="label">
+                  <span className="label-text">Weight?</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="weight"
+                    type="number"
+                    min="1"
+                    max="1000"
+                    step="0.1"
+                    placeholder="100"
+                    value={formState.value.weight}
+                    onChange={handleOnChangeWeight}
+                    onBlur={handleOnBlurWeight}
+                    className={`input-bordered input w-full max-w-xs ${formState.isValid.weight ? '' : 'input-error'}`}
+                  />
+                  <span>Kg</span>
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="modal-action">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+            <button onClick={handleOnClickUpdate} className="btn" disabled={isLoading || !session}>
+              {isLoading && <span className="loading loading-dots loading-xs"></span>}
+              {!isLoading && 'Yay!'}
+            </button>
+          </div>
+        </div>
+      </form>
+    </dialog>
   );
 };
 

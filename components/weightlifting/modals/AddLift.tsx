@@ -2,10 +2,8 @@ import { Lift } from '@/types/Lift';
 import { useSession } from 'next-auth/react';
 import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
-import Modal from '../../ui/Modal';
 
 type Props = {
-  open: boolean;
   onClose: () => void;
   onSubmit: (data: Lift[]) => void;
 };
@@ -115,7 +113,7 @@ const formReducer = (state: FormState, action: FormAction) => {
   }
 };
 
-const AddLift = ({ open, onClose, onSubmit }: Props) => {
+const AddLift = (props: Props) => {
   const { data: session, status } = useSession();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -155,7 +153,7 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
 
   const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     dispatchForm({ type: 'ON_CLOSE' });
-    onClose();
+    props.onClose();
   };
 
   const handleOnClickSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -191,90 +189,92 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
           return !prev;
         });
         const data = await res.json();
-        onSubmit(data.lifts);
+        props.onSubmit(data.lifts);
         dispatchForm({ type: 'ON_CLOSE' });
-        onClose();
+        props.onClose();
       }
     }
   };
 
   return (
-    <Modal open={open}>
-      <div className="flex justify-end">
-        <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
-          <FiX />
-        </button>
-      </div>
-      <div className="card">
-        <div className="card-body">
-          <h2 className="card-title">Add new Lift</h2>
-          <form className="flex flex-col items-center">
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="movement" className="label">
-                <span className="label-text">Movement?</span>
-              </label>
-              <input
-                id="movement"
-                type="text"
-                placeholder="Deadlift, Clean & Jerk…"
-                value={formState.value.movement}
-                onChange={handleOnChangeMovement}
-                onBlur={handleOnBlurMovement}
-                className={`input-bordered input w-full max-w-xs ${formState.isValid.movement ? '' : 'input-error'}`}
-              />
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="reps" className="label">
-                <span className="label-text">Reps?</span>
-              </label>
-              <label className="input-group">
-                <input
-                  id="reps"
-                  type="number"
-                  min="1"
-                  max="15"
-                  step="1"
-                  placeholder="1"
-                  value={formState.value.reps}
-                  onChange={handleOnChangeReps}
-                  onBlur={handleOnBlurReps}
-                  className={`input-bordered input w-full max-w-xs ${formState.isValid.reps ? '' : 'input-error'}`}
-                />
-                <span>RM</span>
-              </label>
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="weight" className="label">
-                <span className="label-text">Weight?</span>
-              </label>
-              <label className="input-group">
-                <input
-                  id="weight"
-                  type="number"
-                  min="1"
-                  max="1000"
-                  step="0.1"
-                  placeholder="100"
-                  value={formState.value.weight}
-                  onChange={handleOnChangeWeight}
-                  onBlur={handleOnBlurWeight}
-                  className={`input-bordered input w-full max-w-xs ${formState.isValid.weight ? '' : 'input-error'}`}
-                />
-                <span>Kg</span>
-              </label>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div className="modal-action">
-        <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
-          <button onClick={handleOnClickSave} className="btn" disabled={isLoading || !session}>
-            {isLoading && <span className="loading loading-dots loading-xs"></span>}
-            {!isLoading && 'Yay!'}
+    <dialog id="modal-add-lift" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
+      <form method="dialog" className="modal-box">
+        <div className="flex justify-end">
+          <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
+            <FiX />
           </button>
         </div>
-      </div>
-    </Modal>
+        <div className="card">
+          <div className="card-body">
+            <h2 className="card-title">Add new Lift</h2>
+            <form className="flex flex-col items-center">
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="movement" className="label">
+                  <span className="label-text">Movement?</span>
+                </label>
+                <input
+                  id="movement"
+                  type="text"
+                  placeholder="Deadlift, Clean & Jerk…"
+                  value={formState.value.movement}
+                  onChange={handleOnChangeMovement}
+                  onBlur={handleOnBlurMovement}
+                  className={`input-bordered input w-full max-w-xs ${formState.isValid.movement ? '' : 'input-error'}`}
+                />
+              </div>
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="reps" className="label">
+                  <span className="label-text">Reps?</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="reps"
+                    type="number"
+                    min="1"
+                    max="15"
+                    step="1"
+                    placeholder="1"
+                    value={formState.value.reps}
+                    onChange={handleOnChangeReps}
+                    onBlur={handleOnBlurReps}
+                    className={`input-bordered input w-full max-w-xs ${formState.isValid.reps ? '' : 'input-error'}`}
+                  />
+                  <span>RM</span>
+                </label>
+              </div>
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="weight" className="label">
+                  <span className="label-text">Weight?</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="weight"
+                    type="number"
+                    min="1"
+                    max="1000"
+                    step="0.1"
+                    placeholder="100"
+                    value={formState.value.weight}
+                    onChange={handleOnChangeWeight}
+                    onBlur={handleOnBlurWeight}
+                    className={`input-bordered input w-full max-w-xs ${formState.isValid.weight ? '' : 'input-error'}`}
+                  />
+                  <span>Kg</span>
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="modal-action">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+            <button onClick={handleOnClickSave} className="btn" disabled={isLoading || !session}>
+              {isLoading && <span className="loading loading-dots loading-xs"></span>}
+              {!isLoading && 'Yay!'}
+            </button>
+          </div>
+        </div>
+      </form>
+    </dialog>
   );
 };
 

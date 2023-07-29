@@ -32,25 +32,13 @@ const LiftPage = (props: Props) => {
     setActiveRep({ ...rm });
   };
 
-  const [openModalUpdateSet, setOpenModalUpdateSet] = useState(false);
   const handleToggleModalUpdateSet = () =>
-    setOpenModalUpdateSet((prev) => {
-      return !prev;
-    });
+    (document.getElementById('modal-update-set') as HTMLDialogElement)!.showModal();
 
-  const [openModalAddSet, setOpenModalAddSet] = useState(false);
-  const handleToggleModalAddSet = () => {
-    setOpenModalAddSet((prev) => {
-      return !prev;
-    });
-  };
+  const handleToggleModalAddSet = () => (document.getElementById('modal-add-set') as HTMLDialogElement)!.showModal();
 
-  const [openModalUpdateLift, setOpenModalUpdateLift] = useState(false);
-  const handleToggleModalUpdateLift = () => {
-    setOpenModalUpdateLift((prev) => {
-      return !prev;
-    });
-  };
+  const handleToggleModalUpdateLift = () =>
+    (document.getElementById('modal-update-lift') as HTMLDialogElement)!.showModal();
 
   const handleDeleteLift = (data: string) => {
     router.push(`/${router.query.userId}`);
@@ -206,15 +194,13 @@ const LiftPage = (props: Props) => {
       </div>
       <UpdateSet
         rm={activeRep}
-        open={openModalUpdateSet}
         onClose={handleToggleModalUpdateSet}
         onDelete={handleDeleteSet}
         onSubmit={handleUpdateSet}
       ></UpdateSet>
-      <AddSet lift={lift} open={openModalAddSet} onClose={handleToggleModalAddSet} onSubmit={handleAddSet}></AddSet>
+      <AddSet lift={lift} onClose={handleToggleModalAddSet} onSubmit={handleAddSet}></AddSet>
       <UpdateLift
         lift={lift}
-        open={openModalUpdateLift}
         onClose={handleToggleModalUpdateLift}
         onDelete={handleDeleteLift}
         onSubmit={handleUpdateLift}

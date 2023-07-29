@@ -24,10 +24,7 @@ const NavBar = () => {
   };
 
   const [openModalSettings, setOpenModalSettings] = useState(false);
-  const handleToggleModalSettings = () =>
-    setOpenModalSettings((prev) => {
-      return !prev;
-    });
+  const handleToggleModalSettings = () => (document.getElementById('modal-settings') as HTMLDialogElement)!.showModal();
 
   let right = (
     <div className="flex-1">
@@ -90,7 +87,7 @@ const NavBar = () => {
           {left}
         </div>
       </div>
-      <Settings open={openModalSettings} onClose={handleToggleModalSettings} onSubmit={() => {}} />
+      <Settings onClose={handleToggleModalSettings} onSubmit={() => {}} />
     </>
   );
 };

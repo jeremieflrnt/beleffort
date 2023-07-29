@@ -9,14 +9,10 @@ import { FiPlus } from 'react-icons/fi';
 import prisma from '../../lib/prisma';
 
 const UserPage = (props: any) => {
-  const [open, setOpen] = useState(false);
-  const handleToggle = () =>
-    setOpen((prev) => {
-      return !prev;
-    });
+  const handleToggle = () => (document.getElementById('modal-add-lift') as HTMLDialogElement)!.showModal();
 
   const [lifts, setLifts] = useState(props.lifts);
-  console.log('lifts', lifts);
+
   const handleSubmitAddNew = (data: Lift[]) => {
     setLifts([...data]);
   };
@@ -33,7 +29,7 @@ const UserPage = (props: any) => {
       <label onClick={handleToggle} className="btn-circle btn absolute bottom-0 right-0 m-4">
         <FiPlus size={'2em'} />
       </label>
-      <AddLift open={open} onClose={handleToggle} onSubmit={handleSubmitAddNew}></AddLift>
+      <AddLift onClose={handleToggle} onSubmit={handleSubmitAddNew}></AddLift>
     </>
   );
 };

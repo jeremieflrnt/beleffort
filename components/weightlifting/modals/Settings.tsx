@@ -1,10 +1,8 @@
 import { Lift } from '@/types/Lift';
 import { useReducer } from 'react';
 import { FiX } from 'react-icons/fi';
-import Modal from '../../ui/Modal';
 
 type Props = {
-  open: boolean;
   onClose: () => void;
   onSubmit: (data: Lift[]) => void;
 };
@@ -61,37 +59,42 @@ const Settings = (props: Props) => {
   };
 
   return (
-    <Modal open={props.open}>
-      <div className="flex justify-end">
-        <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
-          <FiX />
-        </button>
-      </div>
-      <div className="card">
-        <div className="card-body">
-          <h2 className="card-title">Settings</h2>
-          <form className="flex flex-col items-center">
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text mr-4">Set weight to Kg</span>
-                <input
-                  type="checkbox"
-                  className="toggle"
-                  disabled
-                  checked={formState.value.isKg}
-                  onChange={handleOnChange}
-                />
-              </label>
-            </div>
-          </form>
+    <dialog id="modal-settings" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
+      <form method="dialog" className="modal-box">
+        <div className="flex justify-end">
+          <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
+            <FiX />
+          </button>
         </div>
-      </div>
-      <div className="modal-action">
-        <button disabled onClick={handleOnClickSave} className="btn">
-          Yay!
-        </button>
-      </div>
-    </Modal>
+        <div className="card">
+          <div className="card-body">
+            <h2 className="card-title">
+              Settings
+              <div className="badge badge-accent align-top text-xs">soon</div>
+            </h2>
+            <form className="flex flex-col items-center">
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text mr-4">Set weight to Kg</span>
+                  <input
+                    type="checkbox"
+                    className="toggle"
+                    disabled
+                    checked={formState.value.isKg}
+                    onChange={handleOnChange}
+                  />
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="modal-action">
+          <button disabled onClick={handleOnClickSave} className="btn">
+            Yay!
+          </button>
+        </div>
+      </form>
+    </dialog>
   );
 };
 

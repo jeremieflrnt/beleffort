@@ -1,4 +1,3 @@
-import Modal from '@/components/ui/Modal';
 import { Set, SetWithPercentage } from '@/types/Lift';
 import { useReducer, useState } from 'react';
 import { FiTrash2, FiX } from 'react-icons/fi';
@@ -7,7 +6,6 @@ import { useSession } from 'next-auth/react';
 
 type Props = {
   rm: SetWithPercentage;
-  open: boolean;
   onClose: () => void;
   onDelete: (data: string) => void;
   onSubmit: (data: Set) => void;
@@ -148,60 +146,62 @@ const UpdateSet = (props: Props) => {
   };
 
   return (
-    <Modal open={props.open}>
-      <div className="flex justify-end">
-        <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
-          <FiX />
-        </button>
-      </div>
-      <div className="card">
-        <div className="card-body">
-          <h2 className="card-title">Update your {props.rm.rep}RM</h2>
-          <form className="flex flex-col items-center" onSubmit={handleUpdate}>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="weight" className="label">
-                <span className="label-text">Weight?</span>
-              </label>
-              <label className="input-group">
-                <input
-                  id="weight"
-                  type="number"
-                  min="1"
-                  max="1000"
-                  step="0.1"
-                  placeholder="100"
-                  value={formState.value.weight}
-                  onChange={handleOnChangeWeight}
-                  onBlur={handleOnBlurWeight}
-                  className={`input-bordered input w-full max-w-xs ${formState.isValid.weight ? '' : 'input-error'}`}
-                />
-                <span>Kg</span>
-              </label>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div className="modal-action justify-between">
-        <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
-          <button onClick={handleDelete} className="btn-ghost btn" disabled={isLoading || !session}>
-            {isLoading && <span className="loading loading-dots loading-xs"></span>}
-            {!isLoading && (
-              <>
-                <FiTrash2 />
-                Delete this set
-              </>
-            )}
+    <dialog id="modal-update-set" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
+      <form method="dialog" className="modal-box">
+        <div className="flex justify-end">
+          <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
+            <FiX />
           </button>
         </div>
+        <div className="card">
+          <div className="card-body">
+            <h2 className="card-title">Update your {props.rm.rep}RM</h2>
+            <form className="flex flex-col items-center" onSubmit={handleUpdate}>
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="weight" className="label">
+                  <span className="label-text">Weight?</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="weight"
+                    type="number"
+                    min="1"
+                    max="1000"
+                    step="0.1"
+                    placeholder="100"
+                    value={formState.value.weight}
+                    onChange={handleOnChangeWeight}
+                    onBlur={handleOnBlurWeight}
+                    className={`input-bordered input w-full max-w-xs ${formState.isValid.weight ? '' : 'input-error'}`}
+                  />
+                  <span>Kg</span>
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="modal-action justify-between">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+            <button onClick={handleDelete} className="btn-ghost btn" disabled={isLoading || !session}>
+              {isLoading && <span className="loading loading-dots loading-xs"></span>}
+              {!isLoading && (
+                <>
+                  <FiTrash2 />
+                  Delete this set
+                </>
+              )}
+            </button>
+          </div>
 
-        <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
-          <button onClick={handleUpdate} className="btn" disabled={isLoading || !session}>
-            {isLoading && <span className="loading loading-dots loading-xs"></span>}
-            {!isLoading && 'Yay!'}
-          </button>
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+            <button onClick={handleUpdate} className="btn" disabled={isLoading || !session}>
+              {isLoading && <span className="loading loading-dots loading-xs"></span>}
+              {!isLoading && 'Yay!'}
+            </button>
+          </div>
         </div>
-      </div>
-    </Modal>
+      </form>
+    </dialog>
   );
 };
 
