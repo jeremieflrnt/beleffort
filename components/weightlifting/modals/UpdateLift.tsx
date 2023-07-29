@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 
 type Props = {
   lift: Lift;
-  onClose: () => void;
   onDelete: (data: string) => void;
   onSubmit: (data: Lift) => void;
 };
@@ -74,6 +73,8 @@ const UpdateSet = (props: Props) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const onClose = () => (document.getElementById('modal-update-lift') as HTMLDialogElement).close();
+
   const handleOnChangeMovement = (event: React.FocusEvent<HTMLInputElement>) => {
     dispatchForm({ type: 'ON_CHANGE_MOVEMENT', value: event.target.value });
   };
@@ -84,8 +85,7 @@ const UpdateSet = (props: Props) => {
 
   const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     dispatchForm({ type: 'ON_CLOSE' });
-
-    props.onClose();
+    onClose();
   };
 
   const handleUpdate = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
@@ -115,7 +115,7 @@ const UpdateSet = (props: Props) => {
         const data = await res.json();
         props.onSubmit({ ...data });
         dispatchForm({ type: 'ON_CLOSE' });
-        props.onClose();
+        onClose();
       }
     }
   };
@@ -139,13 +139,13 @@ const UpdateSet = (props: Props) => {
       const data = await res.json();
       props.onDelete(data.id);
       dispatchForm({ type: 'ON_CLOSE' });
-      props.onClose();
+      onClose();
     }
   };
 
   return (
     <dialog id="modal-update-lift" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
-      <form method="dialog" className="modal-box">
+      <div className="modal-box">
         <div className="flex justify-end">
           <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
             <FiX />
@@ -173,7 +173,7 @@ const UpdateSet = (props: Props) => {
           </div>
         </div>
         <div className="modal-action justify-between">
-          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Sign in!">
             <button onClick={handleDelete} className="btn-ghost btn" disabled={isLoading || !session}>
               {isLoading && <span className="loading loading-dots loading-xs"></span>}
               {!isLoading && (
@@ -184,14 +184,14 @@ const UpdateSet = (props: Props) => {
               )}
             </button>
           </div>
-          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Sign in!">
             <button onClick={handleUpdate} className="btn" disabled={isLoading || !session}>
               {isLoading && <span className="loading loading-dots loading-xs"></span>}
               {!isLoading && 'Yay!'}
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </dialog>
   );
 };

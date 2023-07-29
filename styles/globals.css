@@ -23,16 +23,3 @@ div#__next {
   display: inline-flex;
   align-items: center;
 }
-
-.stats-like {
-  display: inline-grid;
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--b1) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: hsl(var(--bc) / var(--tw-text-opacity));
-  border-radius: var(--rounded-box, 1rem);
-}
-:where(.stats-like) {
-  grid-auto-flow: column;
-  overflow-x: auto;
-}

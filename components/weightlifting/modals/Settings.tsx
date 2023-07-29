@@ -3,7 +3,6 @@ import { useReducer } from 'react';
 import { FiX } from 'react-icons/fi';
 
 type Props = {
-  onClose: () => void;
   onSubmit: (data: Lift[]) => void;
 };
 
@@ -42,6 +41,8 @@ const Settings = (props: Props) => {
     value: { isKg: true },
   });
 
+  const onClose = () => (document.getElementById('modal-settings') as HTMLDialogElement).close();
+
   const handleOnChange = (event: React.FocusEvent<HTMLInputElement>) => {
     console.log('event.target.value', event.target.value);
     dispatchForm({ type: 'ON_SWITCH_KG', value: event.target.value });
@@ -49,7 +50,7 @@ const Settings = (props: Props) => {
 
   const handleOnClickClose = () => {
     dispatchForm({ type: 'ON_CLOSE' });
-    props.onClose();
+    onClose();
   };
 
   const handleOnClickSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -60,7 +61,7 @@ const Settings = (props: Props) => {
 
   return (
     <dialog id="modal-settings" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
-      <form method="dialog" className="modal-box">
+      <div className="modal-box">
         <div className="flex justify-end">
           <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
             <FiX />
@@ -93,7 +94,7 @@ const Settings = (props: Props) => {
             Yay!
           </button>
         </div>
-      </form>
+      </div>
     </dialog>
   );
 };

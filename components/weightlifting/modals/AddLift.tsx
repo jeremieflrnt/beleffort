@@ -4,7 +4,6 @@ import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
 
 type Props = {
-  onClose: () => void;
   onSubmit: (data: Lift[]) => void;
 };
 
@@ -118,6 +117,8 @@ const AddLift = (props: Props) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const onClose = () => (document.getElementById('modal-add-lift') as HTMLDialogElement).close();
+
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { movement: '', reps: '', weight: '' },
     isValid: {
@@ -153,7 +154,7 @@ const AddLift = (props: Props) => {
 
   const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     dispatchForm({ type: 'ON_CLOSE' });
-    props.onClose();
+    onClose();
   };
 
   const handleOnClickSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -191,14 +192,14 @@ const AddLift = (props: Props) => {
         const data = await res.json();
         props.onSubmit(data.lifts);
         dispatchForm({ type: 'ON_CLOSE' });
-        props.onClose();
+        onClose();
       }
     }
   };
 
   return (
     <dialog id="modal-add-lift" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
-      <form method="dialog" className="modal-box">
+      <div className="modal-box">
         <div className="flex justify-end">
           <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
             <FiX />
@@ -266,14 +267,14 @@ const AddLift = (props: Props) => {
           </div>
         </div>
         <div className="modal-action">
-          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Sign in!">
             <button onClick={handleOnClickSave} className="btn" disabled={isLoading || !session}>
               {isLoading && <span className="loading loading-dots loading-xs"></span>}
               {!isLoading && 'Yay!'}
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </dialog>
   );
 };

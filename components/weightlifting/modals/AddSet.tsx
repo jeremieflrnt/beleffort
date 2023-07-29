@@ -6,7 +6,6 @@ import { isValidReps, isValidWeight } from './AddLift';
 
 type Props = {
   lift: Lift;
-  onClose: () => void;
   onSubmit: (data: Lift & { rep: string }) => void;
 };
 
@@ -96,6 +95,8 @@ const UpdateSet = (props: Props) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const onClose = () => (document.getElementById('modal-add-set') as HTMLDialogElement).close();
+
   const handleOnChangeReps = (event: React.FocusEvent<HTMLInputElement>) => {
     dispatchForm({ type: 'ON_CHANGE_REPS', value: event.target.value });
   };
@@ -115,7 +116,7 @@ const UpdateSet = (props: Props) => {
   const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     dispatchForm({ type: 'ON_CLOSE' });
 
-    props.onClose();
+    onClose();
   };
 
   const handleOnClickUpdate = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
@@ -149,14 +150,14 @@ const UpdateSet = (props: Props) => {
         const data = await res.json();
         props.onSubmit({ ...data, rep: formState.value.reps });
         dispatchForm({ type: 'ON_CLOSE' });
-        props.onClose();
+        onClose();
       }
     }
   };
 
   return (
     <dialog id="modal-add-set" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
-      <form method="dialog" className="modal-box">
+      <div className="modal-box">
         <div className="flex justify-end">
           <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
             <FiX />
@@ -210,14 +211,14 @@ const UpdateSet = (props: Props) => {
           </div>
         </div>
         <div className="modal-action">
-          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Sign in!">
             <button onClick={handleOnClickUpdate} className="btn" disabled={isLoading || !session}>
               {isLoading && <span className="loading loading-dots loading-xs"></span>}
               {!isLoading && 'Yay!'}
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </dialog>
   );
 };

@@ -13,7 +13,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FiInfo } from 'react-icons/fi';
+import { RiArrowGoBackLine } from 'react-icons/ri';
 import prisma from '../../../lib/prisma';
+import Link from 'next/link';
 
 type Props = {
   lift: Lift;
@@ -153,7 +155,6 @@ const LiftPage = (props: Props) => {
             <div className="cursor-pointer text-5xl font-extrabold" onClick={handleToggleModalUpdateLift}>
               {lift.movement}
             </div>
-            {/* <FiEdit size={'1.5em'} /> */}
           </div>
 
           <SetTabs
@@ -192,19 +193,12 @@ const LiftPage = (props: Props) => {
           {activeRep.percentage === 100 && <Calculator weight={activeRep.weight} />}
         </div>
       </div>
-      <UpdateSet
-        rm={activeRep}
-        onClose={handleToggleModalUpdateSet}
-        onDelete={handleDeleteSet}
-        onSubmit={handleUpdateSet}
-      ></UpdateSet>
-      <AddSet lift={lift} onClose={handleToggleModalAddSet} onSubmit={handleAddSet}></AddSet>
-      <UpdateLift
-        lift={lift}
-        onClose={handleToggleModalUpdateLift}
-        onDelete={handleDeleteLift}
-        onSubmit={handleUpdateLift}
-      ></UpdateLift>
+      <Link className="btn-circle btn mt-4 text-base md:mt-8" href={`/demo`}>
+        <RiArrowGoBackLine size={'2em'} />
+      </Link>
+      <UpdateSet rm={activeRep} onDelete={handleDeleteSet} onSubmit={handleUpdateSet}></UpdateSet>
+      <AddSet lift={lift} onSubmit={handleAddSet}></AddSet>
+      <UpdateLift lift={lift} onDelete={handleDeleteLift} onSubmit={handleUpdateLift}></UpdateLift>
     </>
   );
 };

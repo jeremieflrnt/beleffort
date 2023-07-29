@@ -12,8 +12,6 @@ const Lifts = (props: Props) => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  console.log('session toto', session?.user?.name ? session?.user?.name : '/');
-
   const handleSelected = (id: string) => {
     router.push(`/${slugify(session?.user?.name ? session?.user?.name : '/demo', { lower: true })}/lift/${id}`);
   };
