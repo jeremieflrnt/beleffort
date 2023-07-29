@@ -13,7 +13,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FiInfo } from 'react-icons/fi';
+import { RiArrowGoBackLine } from 'react-icons/ri';
 import prisma from '../../../lib/prisma';
+import Link from 'next/link';
 
 type Props = {
   lift: Lift;
@@ -32,25 +34,13 @@ const LiftPage = (props: Props) => {
     setActiveRep({ ...rm });
   };
 
-  const [openModalUpdateSet, setOpenModalUpdateSet] = useState(false);
   const handleToggleModalUpdateSet = () =>
-    setOpenModalUpdateSet((prev) => {
-      return !prev;
-    });
+    (document.getElementById('modal-update-set') as HTMLDialogElement)!.showModal();
 
-  const [openModalAddSet, setOpenModalAddSet] = useState(false);
-  const handleToggleModalAddSet = () => {
-    setOpenModalAddSet((prev) => {
-      return !prev;
-    });
-  };
+  const handleToggleModalAddSet = () => (document.getElementById('modal-add-set') as HTMLDialogElement)!.showModal();
 
-  const [openModalUpdateLift, setOpenModalUpdateLift] = useState(false);
-  const handleToggleModalUpdateLift = () => {
-    setOpenModalUpdateLift((prev) => {
-      return !prev;
-    });
-  };
+  const handleToggleModalUpdateLift = () =>
+    (document.getElementById('modal-update-lift') as HTMLDialogElement)!.showModal();
 
   const handleDeleteLift = (data: string) => {
     router.push(`/${router.query.userId}`);
@@ -165,7 +155,6 @@ const LiftPage = (props: Props) => {
             <div className="cursor-pointer text-5xl font-extrabold" onClick={handleToggleModalUpdateLift}>
               {lift.movement}
             </div>
-            {/* <FiEdit size={'1.5em'} /> */}
           </div>
 
           <SetTabs
@@ -204,21 +193,12 @@ const LiftPage = (props: Props) => {
           {activeRep.percentage === 100 && <Calculator weight={activeRep.weight} />}
         </div>
       </div>
-      <UpdateSet
-        rm={activeRep}
-        open={openModalUpdateSet}
-        onClose={handleToggleModalUpdateSet}
-        onDelete={handleDeleteSet}
-        onSubmit={handleUpdateSet}
-      ></UpdateSet>
-      <AddSet lift={lift} open={openModalAddSet} onClose={handleToggleModalAddSet} onSubmit={handleAddSet}></AddSet>
-      <UpdateLift
-        lift={lift}
-        open={openModalUpdateLift}
-        onClose={handleToggleModalUpdateLift}
-        onDelete={handleDeleteLift}
-        onSubmit={handleUpdateLift}
-      ></UpdateLift>
+      <Link className="btn-circle btn mt-4 text-base md:mt-8" href={`/demo`}>
+        <RiArrowGoBackLine size={'2em'} />
+      </Link>
+      <UpdateSet rm={activeRep} onDelete={handleDeleteSet} onSubmit={handleUpdateSet}></UpdateSet>
+      <AddSet lift={lift} onSubmit={handleAddSet}></AddSet>
+      <UpdateLift lift={lift} onDelete={handleDeleteLift} onSubmit={handleUpdateLift}></UpdateLift>
     </>
   );
 };
@@ -229,7 +209,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { params, req } = context;
   const sessionToken = getSessionToken(req);
 
-  if (!params?.liftId || !sessionToken)
+  if (!params?.liftId || (!sessionToken && params.userId !== 'demo'))
     return {
       notFound: true,
     };

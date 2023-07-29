@@ -1,13 +1,11 @@
-import Modal from '@/components/ui/Modal';
 import { Lift } from '@/types/Lift';
-import { useReducer } from 'react';
-import { isValidReps, isValidWeight } from './AddLift';
+import { useSession } from 'next-auth/react';
+import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
+import { isValidReps, isValidWeight } from './AddLift';
 
 type Props = {
   lift: Lift;
-  open: boolean;
-  onClose: () => void;
   onSubmit: (data: Lift & { rep: string }) => void;
 };
 
@@ -28,7 +26,7 @@ const formReducer = (state: FormState, action: FormAction) => {
   switch (action.type) {
     case 'ON_CHANGE_REPS': {
       return {
-        value: { ...state.value, reps: action.value! },
+        value: { ...state.value, reps: Number(action.value).toFixed().toString() },
         isValid: {
           ...state.isValid,
           reps: isValidReps(Number(action.value)),
@@ -37,10 +35,10 @@ const formReducer = (state: FormState, action: FormAction) => {
     }
     case 'ON_BLUR_REPS': {
       return {
-        value: { ...state.value, reps: roundToNearest(Number(action.value)).toString() },
+        value: { ...state.value, reps: Number(action.value) > 100 ? '100' : action.value! },
         isValid: {
           ...state.isValid,
-          weight: isValidReps(Number(roundToNearest(Number(action.value)))),
+          weight: isValidReps(Number(action.value)),
         },
       };
     }
@@ -85,6 +83,8 @@ const formReducer = (state: FormState, action: FormAction) => {
 };
 
 const UpdateSet = (props: Props) => {
+  const { data: session, status } = useSession();
+
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { reps: '', weight: '' },
     isValid: {
@@ -92,6 +92,10 @@ const UpdateSet = (props: Props) => {
       weight: true,
     },
   });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onClose = () => (document.getElementById('modal-add-set') as HTMLDialogElement).close();
 
   const handleOnChangeReps = (event: React.FocusEvent<HTMLInputElement>) => {
     dispatchForm({ type: 'ON_CHANGE_REPS', value: event.target.value });
@@ -112,7 +116,7 @@ const UpdateSet = (props: Props) => {
   const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     dispatchForm({ type: 'ON_CLOSE' });
 
-    props.onClose();
+    onClose();
   };
 
   const handleOnClickUpdate = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
@@ -128,6 +132,9 @@ const UpdateSet = (props: Props) => {
     }
 
     if (!initInvalid && formState.isValid.reps && formState.isValid.weight) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       const res = await fetch('/api/lift/add-set', {
         method: 'POST',
         body: JSON.stringify({ ...formState.value, id: props.lift.id }),
@@ -137,74 +144,82 @@ const UpdateSet = (props: Props) => {
       });
 
       if ([200, 201].includes(res.status) && res.ok) {
+        setIsLoading((prev) => {
+          return !prev;
+        });
         const data = await res.json();
         props.onSubmit({ ...data, rep: formState.value.reps });
         dispatchForm({ type: 'ON_CLOSE' });
-        props.onClose();
+        onClose();
       }
     }
   };
 
   return (
-    <Modal open={props.open}>
-      <div className="flex justify-end">
-        <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
-          <FiX />
-        </button>
-      </div>
-      <div className="card">
-        <div className="card-body">
-          <h2 className="card-title">Add a new set</h2>
-          <form className="flex flex-col items-center" onSubmit={handleOnClickUpdate}>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="reps" className="label">
-                <span className="label-text">Reps?</span>
-              </label>
-              <label className="input-group">
-                <input
-                  id="reps"
-                  type="number"
-                  min="1"
-                  max="100"
-                  step="1"
-                  placeholder="1"
-                  value={formState.value.reps}
-                  onChange={handleOnChangeReps}
-                  onBlur={handleOnBlurReps}
-                  className={`input-bordered input w-full max-w-xs ${formState.isValid.reps ? '' : 'input-error'}`}
-                />
-                <span>RM</span>
-              </label>
-            </div>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="weight" className="label">
-                <span className="label-text">Weight?</span>
-              </label>
-              <label className="input-group">
-                <input
-                  id="weight"
-                  type="number"
-                  min="1"
-                  max="1000"
-                  step="0.1"
-                  placeholder="100"
-                  value={formState.value.weight}
-                  onChange={handleOnChangeWeight}
-                  onBlur={handleOnBlurWeight}
-                  className={`input-bordered input w-full max-w-xs ${formState.isValid.weight ? '' : 'input-error'}`}
-                />
-                <span>Kg</span>
-              </label>
-            </div>
-          </form>
+    <dialog id="modal-add-set" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
+      <div className="modal-box">
+        <div className="flex justify-end">
+          <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
+            <FiX />
+          </button>
+        </div>
+        <div className="card">
+          <div className="card-body">
+            <h2 className="card-title">Add a new set</h2>
+            <form className="flex flex-col items-center" onSubmit={handleOnClickUpdate}>
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="reps" className="label">
+                  <span className="label-text">Reps?</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="reps"
+                    type="number"
+                    min="1"
+                    max="100"
+                    step="1"
+                    placeholder="1"
+                    value={formState.value.reps}
+                    onChange={handleOnChangeReps}
+                    onBlur={handleOnBlurReps}
+                    className={`input-bordered input w-full max-w-xs ${formState.isValid.reps ? '' : 'input-error'}`}
+                  />
+                  <span>RM</span>
+                </label>
+              </div>
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="weight" className="label">
+                  <span className="label-text">Weight?</span>
+                </label>
+                <label className="input-group">
+                  <input
+                    id="weight"
+                    type="number"
+                    min="1"
+                    max="1000"
+                    step="0.1"
+                    placeholder="100"
+                    value={formState.value.weight}
+                    onChange={handleOnChangeWeight}
+                    onBlur={handleOnBlurWeight}
+                    className={`input-bordered input w-full max-w-xs ${formState.isValid.weight ? '' : 'input-error'}`}
+                  />
+                  <span>Kg</span>
+                </label>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="modal-action">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Sign in!">
+            <button onClick={handleOnClickUpdate} className="btn" disabled={isLoading || !session}>
+              {isLoading && <span className="loading loading-dots loading-xs"></span>}
+              {!isLoading && 'Yay!'}
+            </button>
+          </div>
         </div>
       </div>
-      <div className="modal-action">
-        <button onClick={handleOnClickUpdate} className="btn">
-          Yay!
-        </button>
-      </div>
-    </Modal>
+    </dialog>
   );
 };
 

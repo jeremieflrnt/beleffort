@@ -1,23 +1,29 @@
-import { useSession, signOut, signIn } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import slugify from 'slugify';
 import Settings from '../weightlifting/modals/Settings';
-import { useState } from 'react';
 
 const NavBar = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const handleLogout = async () => {
+    console.log('Logout');
+
     await signOut({ callbackUrl: '/' });
   };
 
-  const [openModalSettings, setOpenModalSettings] = useState(false);
-  const handleToggleModalSettings = () =>
-    setOpenModalSettings((prev) => {
-      return !prev;
-    });
+  const handleSignIn = () => {
+    if (!session) signIn(undefined, { callbackUrl: '/' });
+    else {
+      const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
+      router.push(slugifiedName);
+    }
+  };
+
+  const handleToggleModalSettings = () => (document.getElementById('modal-settings') as HTMLDialogElement)!.showModal();
 
   let right = (
     <div className="flex-1">
@@ -30,41 +36,36 @@ const NavBar = () => {
   if (session) {
     const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
     left = (
-      <div className="flex-none">
-        {/* <Link className="btn-ghost btn text-xl normal-case" href={`/${slugifiedName}`}>
-          My page
-        </Link> */}
-        <ul className="menu menu-horizontal px-1">
+      <div className="dropdown-end dropdown">
+        <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
+          <div className="w-10">
+            <Image className="rounded-full" alt="avatar" src={session.user?.image!} fill />
+          </div>
+        </label>
+        <ul
+          tabIndex={0}
+          className="menu-compact dropdown-content menu rounded-box z-[1] mt-3 w-fit bg-base-100 p-2 shadow "
+        >
           <li>
-            <Link className="" href={`/${slugifiedName}`}>
-              My lifts
+            <Link className="justify-between" href={`/${slugifiedName}`}>
+              {session.user?.name}
             </Link>
           </li>
+          <li>
+            <a onClick={handleToggleModalSettings}>Settings</a>
+          </li>
+          <li>
+            <a onClick={handleLogout}>Logout</a>
+          </li>
         </ul>
-        <div className="dropdown-end dropdown">
-          <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
-            <div className="w-10">
-              <Image className="rounded-full" alt="avatar" src={session.user?.image!} fill />
-            </div>
-          </label>
-          <ul tabIndex={0} className="dropdown-content menu rounded-box menu-compact mt-3 w-fit bg-base-100 p-2 shadow">
-            <li>
-              <Link className="justify-between" href={`/${slugifiedName}`}>
-                {session.user?.name}
-              </Link>
-            </li>
-            <li>
-              <a onClick={handleToggleModalSettings}>Settings</a>
-            </li>
-            <li>
-              <a onClick={handleLogout}>Logout</a>
-            </li>
-          </ul>
-        </div>
       </div>
     );
   } else {
-    left = <></>;
+    left = (
+      <button className="btn-ghost btn" onClick={handleSignIn}>
+        Sign in
+      </button>
+    );
   }
   return (
     <>
@@ -74,7 +75,7 @@ const NavBar = () => {
           {left}
         </div>
       </div>
-      <Settings open={openModalSettings} onClose={handleToggleModalSettings} onSubmit={() => {}} />
+      <Settings onSubmit={() => {}} />
     </>
   );
 };

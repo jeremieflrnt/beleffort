@@ -1,13 +1,11 @@
-import Modal from '@/components/ui/Modal';
 import { Lift } from '@/types/Lift';
-import { useReducer } from 'react';
-import { FiX } from 'react-icons/fi';
+import { useReducer, useState } from 'react';
+import { FiTrash2, FiX } from 'react-icons/fi';
 import { isValidMovement } from './AddLift';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   lift: Lift;
-  open: boolean;
-  onClose: () => void;
   onDelete: (data: string) => void;
   onSubmit: (data: Lift) => void;
 };
@@ -64,12 +62,18 @@ const formReducer = (state: FormState, action: FormAction) => {
 };
 
 const UpdateSet = (props: Props) => {
+  const { data: session, status } = useSession();
+
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { movement: '' },
     isValid: {
       movement: true,
     },
   });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onClose = () => (document.getElementById('modal-update-lift') as HTMLDialogElement).close();
 
   const handleOnChangeMovement = (event: React.FocusEvent<HTMLInputElement>) => {
     dispatchForm({ type: 'ON_CHANGE_MOVEMENT', value: event.target.value });
@@ -81,8 +85,7 @@ const UpdateSet = (props: Props) => {
 
   const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
     dispatchForm({ type: 'ON_CLOSE' });
-
-    props.onClose();
+    onClose();
   };
 
   const handleUpdate = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
@@ -94,6 +97,9 @@ const UpdateSet = (props: Props) => {
     }
 
     if (!initInvalid && formState.isValid.movement) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       const res = await fetch('/api/lift/update-lift', {
         method: 'PUT',
         body: JSON.stringify({ ...formState.value, id: props.lift.id }),
@@ -103,15 +109,21 @@ const UpdateSet = (props: Props) => {
       });
 
       if (res.status === 200 && res.ok) {
+        setIsLoading((prev) => {
+          return !prev;
+        });
         const data = await res.json();
         props.onSubmit({ ...data });
         dispatchForm({ type: 'ON_CLOSE' });
-        props.onClose();
+        onClose();
       }
     }
   };
 
   const handleDelete = async (event: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => {
+    setIsLoading((prev) => {
+      return !prev;
+    });
     const res = await fetch('/api/lift/delete-lift', {
       method: 'DELETE',
       body: JSON.stringify({ id: props.lift.id }),
@@ -121,50 +133,66 @@ const UpdateSet = (props: Props) => {
     });
 
     if (res.status === 200 && res.ok) {
+      setIsLoading((prev) => {
+        return !prev;
+      });
       const data = await res.json();
       props.onDelete(data.id);
       dispatchForm({ type: 'ON_CLOSE' });
-      props.onClose();
+      onClose();
     }
   };
 
   return (
-    <Modal open={props.open}>
-      <div className="flex justify-end">
-        <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
-          <FiX />
-        </button>
-      </div>
-      <div className="card">
-        <div className="card-body">
-          <h2 className="card-title">Update your Lift</h2>
-          <form className="flex flex-col items-center" onSubmit={handleUpdate}>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="movement" className="label">
-                <span className="label-text">Movement?</span>
-              </label>
-              <input
-                id="movement"
-                type="text"
-                placeholder="Deadlift, Clean & Jerk…"
-                value={formState.value.movement}
-                onChange={handleOnChangeMovement}
-                onBlur={handleOnBlurMovement}
-                className={`input-bordered input w-full max-w-xs ${formState.isValid.movement ? '' : 'input-error'}`}
-              />
-            </div>
-          </form>
+    <dialog id="modal-update-lift" className="modal modal-bottom backdrop-blur-xs sm:modal-middle">
+      <div className="modal-box">
+        <div className="flex justify-end">
+          <button onClick={handleOnClickClose} className="btn-sm btn-circle btn right-6 top-6 text-end">
+            <FiX />
+          </button>
+        </div>
+        <div className="card">
+          <div className="card-body">
+            <h2 className="card-title">Update your Lift</h2>
+            <form className="flex flex-col items-center" onSubmit={handleUpdate}>
+              <div className="form-control w-full max-w-xs">
+                <label htmlFor="movement" className="label">
+                  <span className="label-text">Movement?</span>
+                </label>
+                <input
+                  id="movement"
+                  type="text"
+                  placeholder="Deadlift, Clean & Jerk…"
+                  value={formState.value.movement}
+                  onChange={handleOnChangeMovement}
+                  onBlur={handleOnBlurMovement}
+                  className={`input-bordered input w-full max-w-xs ${formState.isValid.movement ? '' : 'input-error'}`}
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="modal-action justify-between">
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Sign in!">
+            <button onClick={handleDelete} className="btn-ghost btn" disabled={isLoading || !session}>
+              {isLoading && <span className="loading loading-dots loading-xs"></span>}
+              {!isLoading && (
+                <>
+                  <FiTrash2 />
+                  Delete this lift
+                </>
+              )}
+            </button>
+          </div>
+          <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Sign in!">
+            <button onClick={handleUpdate} className="btn" disabled={isLoading || !session}>
+              {isLoading && <span className="loading loading-dots loading-xs"></span>}
+              {!isLoading && 'Yay!'}
+            </button>
+          </div>
         </div>
       </div>
-      <div className="modal-action justify-between">
-        <button onClick={handleDelete} className="btn-ghost btn">
-          Delete this lift
-        </button>
-        <button onClick={handleUpdate} className="btn-primary btn">
-          Yay!
-        </button>
-      </div>
-    </Modal>
+    </dialog>
   );
 };
 

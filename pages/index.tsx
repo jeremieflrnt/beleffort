@@ -5,13 +5,11 @@ import { useRouter } from 'next/router';
 import bg from 'public/pexels-victor-freitas-791763.jpg';
 import slugify from 'slugify';
 import screenshotWL from './../public/screenshotWL.png';
+import Link from 'next/link';
 
 const HomePage = () => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  if (session) {
-    const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
-  }
+  const { data: session } = useSession();
   const handleGetStarted = () => {
     if (!session) signIn(undefined, { callbackUrl: '/' });
     else {
@@ -45,9 +43,24 @@ const HomePage = () => {
               set achievable goals and push your limits. Join BelEffort now and elevate your weightlifting game to new
               heights!
             </p>
-            <button className="btn-primary btn" onClick={handleGetStarted}>
-              Get Started
-            </button>
+            {session && (
+              <>
+                <button className="btn-primary btn " onClick={handleGetStarted}>
+                  My lifts
+                </button>
+              </>
+            )}
+            {!session && (
+              <div className="flex w-full">
+                <button className="btn-primary btn grid flex-grow place-items-center " onClick={handleGetStarted}>
+                  Get Started
+                </button>
+                <div className="divider divider-horizontal">OR</div>
+                <Link className="btn-secondary btn grid flex-grow place-items-center" href={'/demo'}>
+                  Demo
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,9 +1,8 @@
-import LiftCard from './LiftCard';
-import React from 'react';
 import { Lift } from '@/types/Lift';
-import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import slugify from 'slugify';
+import LiftCard from './LiftCard';
 
 type Props = {
   lifts: Lift[];
@@ -14,7 +13,7 @@ const Lifts = (props: Props) => {
   const router = useRouter();
 
   const handleSelected = (id: string) => {
-    router.push(`/${slugify(session?.user?.name ? session?.user?.name : '/', { lower: true })}/lift/${id}`);
+    router.push(`/${slugify(session?.user?.name ? session?.user?.name : '/demo', { lower: true })}/lift/${id}`);
   };
 
   return (

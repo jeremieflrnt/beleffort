@@ -6,7 +6,7 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import prisma from '../../lib/prisma';
+import prisma from '../lib/prisma';
 
 const UserPage = (props: any) => {
   const handleToggle = () => (document.getElementById('modal-add-lift') as HTMLDialogElement)!.showModal();
@@ -40,18 +40,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { req } = context;
   const sessionToken = getSessionToken(req);
 
-  if (!sessionToken)
-    return {
-      notFound: true,
-    };
-
   const user = await prisma.user.findFirstOrThrow({
     where: {
-      sessions: {
-        some: {
-          sessionToken: sessionToken,
-        },
-      },
+      email: 'demo@beleffort.app',
     },
     select: {
       name: true,
