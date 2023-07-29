@@ -20,6 +20,7 @@ import Link from 'next/link';
 type Props = {
   lift: Lift;
   oneRm?: Set;
+  user: string;
 };
 
 const LiftPage = (props: Props) => {
@@ -193,7 +194,7 @@ const LiftPage = (props: Props) => {
           {activeRep.percentage === 100 && <Calculator weight={activeRep.weight} />}
         </div>
       </div>
-      <Link className="btn-circle btn mt-4 text-base md:mt-8" href={`/demo`}>
+      <Link className="btn-circle btn mt-4 text-base md:mt-8" href={`/${props.user}`}>
         <RiArrowGoBackLine size={'2em'} />
       </Link>
       <UpdateSet rm={activeRep} onDelete={handleDeleteSet} onSubmit={handleUpdateSet}></UpdateSet>
@@ -247,12 +248,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         props: {
           lift: JSON.parse(JSON.stringify(new Lift(lift.id, lift.movement, lift.sets))),
           oneRm: JSON.parse(JSON.stringify(lift.sets[0])),
+          user: params.userId,
         },
       };
     else
       return {
         props: {
           lift: JSON.parse(JSON.stringify(new Lift(lift.id, lift.movement, lift.sets))),
+          user: params.userId,
         },
       };
   } else
