@@ -1,7 +1,7 @@
 import Modal from '@/components/ui/Modal';
 import { Lift } from '@/types/Lift';
 import { useReducer, useState } from 'react';
-import { FiX } from 'react-icons/fi';
+import { FiTrash2, FiX } from 'react-icons/fi';
 import { isValidMovement } from './AddLift';
 
 type Props = {
@@ -171,12 +171,17 @@ const UpdateSet = (props: Props) => {
         </div>
       </div>
       <div className="modal-action justify-between">
-        <button onClick={handleDelete} className="btn-ghost btn">
-          {isLoading && <span className="loading-dots loading-xs loading"></span>}
-          {!isLoading && 'Delete this lift'}
+        <button onClick={handleDelete} className="btn-ghost btn" disabled={isLoading}>
+          {isLoading && <span className="loading loading-dots loading-xs"></span>}
+          {!isLoading && (
+            <>
+              <FiTrash2 />
+              Delete this lift
+            </>
+          )}
         </button>
-        <button onClick={handleUpdate} className="btn-primary btn">
-          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+        <button onClick={handleUpdate} className="btn" disabled={isLoading}>
+          {isLoading && <span className="loading loading-dots loading-xs"></span>}
           {!isLoading && 'Yay!'}
         </button>
       </div>

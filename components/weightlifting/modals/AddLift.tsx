@@ -28,7 +28,8 @@ export const isValidMovement = (data: string) => {
   return data.length > 3;
 };
 export const isValidReps = (data: number) => {
-  return data >= 1 && data <= 50 && Number.isInteger(data);
+  console.log('data', data);
+  return data >= 1 && data <= 100 && Number.isInteger(data);
 };
 export const isValidWeight = (data: number) => {
   return data >= 1 && data <= 1000;
@@ -82,8 +83,9 @@ const formReducer = (state: FormState, action: FormAction) => {
       };
     }
     case 'ON_BLUR_WEIGHT': {
+      const roundedValue = action.value!.match(/^-?\d+(?:\.\d{0,2})?/);
       return {
-        value: { ...state.value, weight: roundToNearest(Number(action.value)).toString() },
+        value: { ...state.value, weight: roundedValue ? roundedValue[0] : action.value! },
         isValid: {
           ...state.isValid,
           weight: isValidWeight(Number(action.value)),
@@ -265,8 +267,8 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
         </div>
       </div>
       <div className="modal-action">
-        <button onClick={handleOnClickSave} className="btn">
-          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+        <button onClick={handleOnClickSave} className="btn" disabled={isLoading}>
+          {isLoading && <span className="loading loading-dots loading-xs"></span>}
           {!isLoading && 'Yay!'}
         </button>
       </div>
@@ -275,11 +277,3 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
 };
 
 export default AddLift;
-
-function roundToNearestIncrement(num: number, increment: number): number {
-  return Math.round(num / increment) * increment;
-}
-
-function roundToNearest(num: number, increment: number = 0.1): number {
-  return roundToNearestIncrement(num, increment);
-}

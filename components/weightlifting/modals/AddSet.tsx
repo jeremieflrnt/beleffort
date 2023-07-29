@@ -28,7 +28,7 @@ const formReducer = (state: FormState, action: FormAction) => {
   switch (action.type) {
     case 'ON_CHANGE_REPS': {
       return {
-        value: { ...state.value, reps: action.value! },
+        value: { ...state.value, reps: Number(action.value).toFixed().toString() },
         isValid: {
           ...state.isValid,
           reps: isValidReps(Number(action.value)),
@@ -37,10 +37,10 @@ const formReducer = (state: FormState, action: FormAction) => {
     }
     case 'ON_BLUR_REPS': {
       return {
-        value: { ...state.value, reps: roundToNearest(Number(action.value)).toString() },
+        value: { ...state.value, reps: Number(action.value) > 100 ? '100' : action.value! },
         isValid: {
           ...state.isValid,
-          weight: isValidReps(Number(roundToNearest(Number(action.value)))),
+          weight: isValidReps(Number(action.value)),
         },
       };
     }
@@ -208,8 +208,8 @@ const UpdateSet = (props: Props) => {
         </div>
       </div>
       <div className="modal-action">
-        <button onClick={handleOnClickUpdate} className="btn">
-          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+        <button onClick={handleOnClickUpdate} className="btn" disabled={isLoading}>
+          {isLoading && <span className="loading loading-dots loading-xs"></span>}
           {!isLoading && 'Yay!'}
         </button>
       </div>

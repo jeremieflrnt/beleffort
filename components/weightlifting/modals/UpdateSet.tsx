@@ -1,7 +1,7 @@
 import Modal from '@/components/ui/Modal';
 import { Set, SetWithPercentage } from '@/types/Lift';
 import { useReducer, useState } from 'react';
-import { FiX } from 'react-icons/fi';
+import { FiTrash2, FiX } from 'react-icons/fi';
 import { isValidWeight } from './AddLift';
 
 type Props = {
@@ -179,12 +179,17 @@ const UpdateSet = (props: Props) => {
         </div>
       </div>
       <div className="modal-action justify-between">
-        <button onClick={handleDelete} className="btn-ghost btn">
-          {isLoading && <span className="loading-dots loading-xs loading"></span>}
-          {!isLoading && 'Delete this set'}
+        <button onClick={handleDelete} className="btn-ghost btn" disabled={isLoading}>
+          {isLoading && <span className="loading loading-dots loading-xs"></span>}
+          {!isLoading && (
+            <>
+              <FiTrash2 />
+              Delete this set
+            </>
+          )}
         </button>
-        <button onClick={handleUpdate} className="btn-primary btn">
-          {isLoading && <span className="loading-dots loading-xs loading"></span>}
+        <button onClick={handleUpdate} className="btn" disabled={isLoading}>
+          {isLoading && <span className="loading loading-dots loading-xs"></span>}
           {!isLoading && 'Yay!'}
         </button>
       </div>
@@ -193,11 +198,3 @@ const UpdateSet = (props: Props) => {
 };
 
 export default UpdateSet;
-
-function roundToNearestIncrement(num: number, increment: number): number {
-  return Math.round(num / increment) * increment;
-}
-
-function roundToNearest(num: number, increment: number = 0.1): number {
-  return roundToNearestIncrement(num, increment);
-}

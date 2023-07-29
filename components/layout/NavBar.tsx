@@ -10,6 +10,8 @@ const NavBar = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const handleLogout = async () => {
+    console.log('Logout');
+
     await signOut({ callbackUrl: '/' });
   };
 
@@ -44,7 +46,10 @@ const NavBar = () => {
               <Image className="rounded-full" alt="avatar" src={session.user?.image!} fill />
             </div>
           </label>
-          <ul tabIndex={0} className="dropdown-content menu rounded-box menu-compact mt-3 w-fit bg-base-100 p-2 shadow">
+          <ul
+            tabIndex={0}
+            className="menu-compact dropdown-content menu rounded-box z-[1] mt-3 w-fit bg-base-100 p-2 shadow "
+          >
             <li>
               <Link className="justify-between" href={`/${slugifiedName}`}>
                 {session.user?.name}
