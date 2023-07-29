@@ -1,4 +1,4 @@
-import { signOut, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -13,6 +13,14 @@ const NavBar = () => {
     console.log('Logout');
 
     await signOut({ callbackUrl: '/' });
+  };
+
+  const handleSignIn = () => {
+    if (!session) signIn(undefined, { callbackUrl: '/' });
+    else {
+      const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
+      router.push(slugifiedName);
+    }
   };
 
   const [openModalSettings, setOpenModalSettings] = useState(false);
@@ -35,7 +43,7 @@ const NavBar = () => {
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <Link className="" href={`/${slugifiedName}`}>
+            <Link className="text-base" href={`/${slugifiedName}`}>
               My lifts
             </Link>
           </li>
@@ -66,7 +74,13 @@ const NavBar = () => {
       </div>
     );
   } else {
-    left = <></>;
+    left = (
+      <>
+        <button className="btn-ghost btn" onClick={handleSignIn}>
+          Sign in
+        </button>
+      </>
+    );
   }
   return (
     <>
