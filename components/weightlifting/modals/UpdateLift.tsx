@@ -3,6 +3,7 @@ import { Lift } from '@/types/Lift';
 import { useReducer, useState } from 'react';
 import { FiTrash2, FiX } from 'react-icons/fi';
 import { isValidMovement } from './AddLift';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   lift: Lift;
@@ -64,6 +65,8 @@ const formReducer = (state: FormState, action: FormAction) => {
 };
 
 const UpdateSet = (props: Props) => {
+  const { data: session, status } = useSession();
+
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { movement: '' },
     isValid: {
@@ -171,19 +174,23 @@ const UpdateSet = (props: Props) => {
         </div>
       </div>
       <div className="modal-action justify-between">
-        <button onClick={handleDelete} className="btn-ghost btn" disabled={isLoading}>
-          {isLoading && <span className="loading loading-dots loading-xs"></span>}
-          {!isLoading && (
-            <>
-              <FiTrash2 />
-              Delete this lift
-            </>
-          )}
-        </button>
-        <button onClick={handleUpdate} className="btn" disabled={isLoading}>
-          {isLoading && <span className="loading loading-dots loading-xs"></span>}
-          {!isLoading && 'Yay!'}
-        </button>
+        <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+          <button onClick={handleDelete} className="btn-ghost btn" disabled={isLoading || !session}>
+            {isLoading && <span className="loading loading-dots loading-xs"></span>}
+            {!isLoading && (
+              <>
+                <FiTrash2 />
+                Delete this lift
+              </>
+            )}
+          </button>
+        </div>
+        <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+          <button onClick={handleUpdate} className="btn" disabled={isLoading || !session}>
+            {isLoading && <span className="loading loading-dots loading-xs"></span>}
+            {!isLoading && 'Yay!'}
+          </button>
+        </div>
       </div>
     </Modal>
   );

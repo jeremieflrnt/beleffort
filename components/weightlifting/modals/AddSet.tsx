@@ -3,6 +3,7 @@ import { Lift } from '@/types/Lift';
 import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import { isValidReps, isValidWeight } from './AddLift';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   lift: Lift;
@@ -85,6 +86,8 @@ const formReducer = (state: FormState, action: FormAction) => {
 };
 
 const UpdateSet = (props: Props) => {
+  const { data: session, status } = useSession();
+
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { reps: '', weight: '' },
     isValid: {
@@ -208,10 +211,12 @@ const UpdateSet = (props: Props) => {
         </div>
       </div>
       <div className="modal-action">
-        <button onClick={handleOnClickUpdate} className="btn" disabled={isLoading}>
-          {isLoading && <span className="loading loading-dots loading-xs"></span>}
-          {!isLoading && 'Yay!'}
-        </button>
+        <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+          <button onClick={handleOnClickUpdate} className="btn" disabled={isLoading || !session}>
+            {isLoading && <span className="loading loading-dots loading-xs"></span>}
+            {!isLoading && 'Yay!'}
+          </button>
+        </div>
       </div>
     </Modal>
   );

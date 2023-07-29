@@ -267,10 +267,12 @@ const AddLift = ({ open, onClose, onSubmit }: Props) => {
         </div>
       </div>
       <div className="modal-action">
-        <button onClick={handleOnClickSave} className="btn" disabled={isLoading}>
-          {isLoading && <span className="loading loading-dots loading-xs"></span>}
-          {!isLoading && 'Yay!'}
-        </button>
+        <div className={`${!session ? 'tooltip-open tooltip' : ''}`} data-tip="Log in!">
+          <button onClick={handleOnClickSave} className="btn" disabled={isLoading || !session}>
+            {isLoading && <span className="loading loading-dots loading-xs"></span>}
+            {!isLoading && 'Yay!'}
+          </button>
+        </div>
       </div>
     </Modal>
   );

@@ -229,7 +229,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { params, req } = context;
   const sessionToken = getSessionToken(req);
 
-  if (!params?.liftId || !sessionToken)
+  if (!params?.liftId || (!sessionToken && params.userId !== 'demo'))
     return {
       notFound: true,
     };
