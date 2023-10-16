@@ -1,8 +1,8 @@
 import { Lift } from '@/types/Lift';
+import { useSession } from 'next-auth/react';
 import { useReducer, useState } from 'react';
 import { FiTrash2, FiX } from 'react-icons/fi';
 import { isValidMovement } from './AddLift';
-import { useSession } from 'next-auth/react';
 
 type Props = {
   lift: Lift;

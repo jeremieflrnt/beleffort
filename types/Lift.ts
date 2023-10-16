@@ -8,6 +8,12 @@ export type SetWithPercentage = Set & {
   percentage: number;
 };
 
+export type LiftRawFromDB = {
+  id: string;
+  movement: string;
+  sets: Set[];
+};
+
 export class Lift {
   id: string;
   movement: string;

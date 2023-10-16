@@ -1,4 +1,4 @@
-import { Lift } from '@/types/Lift';
+import { Lift, LiftRawFromDB } from '@/types/Lift';
 import { useSession } from 'next-auth/react';
 import { useReducer, useState } from 'react';
 import { FiX } from 'react-icons/fi';
@@ -25,7 +25,6 @@ export const isValidMovement = (data: string) => {
   return data.length > 3;
 };
 export const isValidReps = (data: number) => {
-  console.log('data', data);
   return data >= 1 && data <= 100 && Number.isInteger(data);
 };
 export const isValidWeight = (data: number) => {
@@ -190,7 +189,11 @@ const AddLift = (props: Props) => {
           return !prev;
         });
         const data = await res.json();
-        props.onSubmit(data.lifts);
+        const liftsWithPercentage: Lift[] = [];
+        (data.lifts as LiftRawFromDB[]).forEach((lift) => {
+          liftsWithPercentage.push(new Lift(lift.id, lift.movement, lift.sets));
+        });
+        props.onSubmit(liftsWithPercentage);
         dispatchForm({ type: 'ON_CLOSE' });
         onClose();
       }

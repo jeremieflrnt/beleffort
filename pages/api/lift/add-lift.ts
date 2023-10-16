@@ -29,7 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           userId: true,
         },
       });
-      console.log('foundUser.userId', foundUser.userId);
     } catch (error) {
       console.error('error', error);
       res.status(500).json({ message: 'An error occurred.' });

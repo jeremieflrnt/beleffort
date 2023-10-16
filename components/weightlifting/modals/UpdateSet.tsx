@@ -1,8 +1,8 @@
 import { Set, SetWithPercentage } from '@/types/Lift';
+import { useSession } from 'next-auth/react';
 import { useReducer, useState } from 'react';
 import { FiTrash2, FiX } from 'react-icons/fi';
 import { isValidWeight } from './AddLift';
-import { useSession } from 'next-auth/react';
 
 type Props = {
   rm: SetWithPercentage;
@@ -115,6 +115,7 @@ const UpdateSet = (props: Props) => {
         });
         formState.value.weight = '';
         const data = await res.json();
+        console.log('data', data);
         props.onSubmit(data);
         dispatchForm({ type: 'ON_CLOSE' });
         onClose();

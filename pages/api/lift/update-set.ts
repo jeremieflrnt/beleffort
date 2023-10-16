@@ -38,6 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           id: true,
           rep: true,
           weight: true,
+          updatedAt: true,
         },
       });
       res.status(200).json(set);

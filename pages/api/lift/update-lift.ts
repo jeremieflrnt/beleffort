@@ -33,7 +33,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           userId: true,
         },
       });
-      console.log('foundLift.userId', foundLift.userId);
     } catch (error) {
       console.error('error', error);
       res.status(500).json({ message: 'An error occurred.' });

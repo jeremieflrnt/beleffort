@@ -2,7 +2,6 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import slugify from 'slugify';
 import Settings from '../weightlifting/modals/Settings';
 

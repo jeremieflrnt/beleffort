@@ -43,8 +43,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
         },
       });
-      console.log('foundSetForSameRep?.sets', foundSetForSameRep?.sets);
-      console.log('foundSetForSameRep?.sets[0]', foundSetForSameRep?.sets[0]);
       if (foundSetForSameRep) {
         const lift = await prisma.lift.update({
           where: { id: id },

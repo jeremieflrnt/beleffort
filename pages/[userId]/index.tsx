@@ -17,6 +17,8 @@ const UserPage = (props: any) => {
     setLifts([...data]);
   };
 
+  console.log('[UserPage] lifts', lifts);
+
   return (
     <>
       <Head>

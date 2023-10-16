@@ -9,13 +9,13 @@ import { getSessionToken } from '@/lib/utils';
 import { Lift, Set, SetWithPercentage } from '@/types/Lift';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FiInfo } from 'react-icons/fi';
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import prisma from '../../../lib/prisma';
-import Link from 'next/link';
 
 type Props = {
   lift: Lift;
@@ -53,7 +53,7 @@ const LiftPage = (props: Props) => {
 
   const handleUpdateSet = (data: Set) => {
     setActiveRep((prev) => {
-      return { ...prev, weight: data.weight };
+      return { ...prev, weight: data.weight, updatedAt: data.updatedAt };
     });
     setLift((prev) => {
       const updatedSets = prev.sets.map((set) => {
@@ -82,7 +82,6 @@ const LiftPage = (props: Props) => {
 
   const handleDeleteSet = (data: string) => {
     setLift((prev) => {
-      console.log('prev', prev);
       if (prev.sets.length === 1) {
         router.push(`/${router.query.userId}`);
       }
