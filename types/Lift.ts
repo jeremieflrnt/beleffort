@@ -29,11 +29,13 @@ export class Lift {
   }
 }
 
-const getPercentage = (rm: number, table: any): number => {
-  return table[rm] || 0;
+type CorrespondingValue = {
+  [key: number]: number;
 };
 
-const correspondingValue = {
+const getPercentage = (rm: number, table: CorrespondingValue): number => table[rm] || 0;
+
+const correspondingValue: CorrespondingValue = {
   1: 100,
   2: 95,
   3: 93,

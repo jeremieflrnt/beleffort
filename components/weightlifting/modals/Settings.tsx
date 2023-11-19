@@ -36,6 +36,7 @@ const formReducer = (state: FormState, action: FormAction) => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Settings = (props: Props) => {
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { isKg: true },
@@ -53,7 +54,7 @@ const Settings = (props: Props) => {
     onClose();
   };
 
-  const handleOnClickSave = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickSave = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     console.log('formState.value', formState.value);
     // TODO

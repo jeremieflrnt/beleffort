@@ -10,11 +10,11 @@ import screenshotWL from './../public/screenshotWL.png';
 const HomePage = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const handleGetStarted = () => {
-    if (!session) signIn(undefined, { callbackUrl: '/' });
+  const handleGetStarted = async () => {
+    if (!session) await signIn(undefined, { callbackUrl: '/' });
     else {
       const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
-      router.push(slugifiedName);
+      await router.push(slugifiedName);
     }
   };
   return (

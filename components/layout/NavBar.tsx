@@ -6,7 +6,7 @@ import slugify from 'slugify';
 import Settings from '../weightlifting/modals/Settings';
 
 const NavBar = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const handleLogout = async () => {
     console.log('Logout');
@@ -14,17 +14,17 @@ const NavBar = () => {
     await signOut({ callbackUrl: '/' });
   };
 
-  const handleSignIn = () => {
-    if (!session) signIn(undefined, { callbackUrl: '/' });
+  const handleSignIn = async () => {
+    if (!session) await signIn(undefined, { callbackUrl: '/' });
     else {
       const slugifiedName = slugify(session.user?.name ? session.user?.name : '/', { lower: true });
-      router.push(slugifiedName);
+      await router.push(slugifiedName);
     }
   };
 
   const handleToggleModalSettings = () => (document.getElementById('modal-settings') as HTMLDialogElement)!.showModal();
 
-  let right = (
+  const right = (
     <div className="flex-1">
       <Link className="btn-ghost btn text-xl normal-case" href={'/'}>
         BelEffort
@@ -38,7 +38,7 @@ const NavBar = () => {
       <div className="dropdown-end dropdown">
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
           <div className="w-10">
-            <Image className="rounded-full" alt="avatar" src={session.user?.image!} fill />
+            {session.user?.image && <Image className="rounded-full" alt="avatar" src={session.user?.image} fill />}
           </div>
         </label>
         <ul

@@ -9,11 +9,11 @@ type Props = {
 };
 
 const Lifts = (props: Props) => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
-  const handleSelected = (id: string) => {
-    router.push(`/${slugify(session?.user?.name ? session?.user?.name : '/demo', { lower: true })}/lift/${id}`);
+  const handleSelected = async (id: string) => {
+    await router.push(`/${slugify(session?.user?.name ? session?.user?.name : '/demo', { lower: true })}/lift/${id}`);
   };
 
   return (

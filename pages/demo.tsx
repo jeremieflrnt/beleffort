@@ -1,14 +1,16 @@
 import Lifts from '@/components/weightlifting/Lifts';
 import AddLift from '@/components/weightlifting/modals/AddLift';
-import { getSessionToken } from '@/lib/utils';
 import { Lift } from '@/types/Lift';
-import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import prisma from '../lib/prisma';
 
-const UserPage = (props: any) => {
+type Props = {
+  lifts: Lift[];
+};
+
+const UserPage = (props: Props) => {
   const handleToggle = () => (document.getElementById('modal-add-lift') as HTMLDialogElement)!.showModal();
 
   const [lifts, setLifts] = useState(props.lifts);
@@ -36,10 +38,7 @@ const UserPage = (props: any) => {
 
 export default UserPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { req } = context;
-  const sessionToken = getSessionToken(req);
-
+export async function getServerSideProps() {
   const user = await prisma.user.findFirstOrThrow({
     where: {
       email: 'demo@beleffort.app',
@@ -72,6 +71,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   });
 
   return {
-    props: { lifts: JSON.parse(JSON.stringify(lifts)) },
+    props: { lifts: JSON.parse(JSON.stringify(lifts)) as Lift[] },
   };
 }

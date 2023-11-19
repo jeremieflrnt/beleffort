@@ -63,7 +63,7 @@ const formReducer = (state: FormState, action: FormAction) => {
 };
 
 const UpdateSet = (props: Props) => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { weight: '' },
@@ -84,7 +84,7 @@ const UpdateSet = (props: Props) => {
     dispatchForm({ type: 'ON_BLUR_WEIGHT', value: event.target.value });
   };
 
-  const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickClose = () => {
     dispatchForm({ type: 'ON_CLOSE' });
     onClose();
   };
@@ -114,8 +114,8 @@ const UpdateSet = (props: Props) => {
           return !prev;
         });
         formState.value.weight = '';
-        const data = await res.json();
-        console.log('data', data);
+        const data = (await res.json()) as Set;
+        console.log('👀 [UpdateSet.tsx:118]: data', data);
         props.onSubmit(data);
         dispatchForm({ type: 'ON_CLOSE' });
         onClose();
@@ -123,7 +123,7 @@ const UpdateSet = (props: Props) => {
     }
   };
 
-  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDelete = async () => {
     setIsLoading((prev) => {
       return !prev;
     });
@@ -140,7 +140,7 @@ const UpdateSet = (props: Props) => {
         return !prev;
       });
       formState.value.weight = '';
-      const data = await res.json();
+      const data = (await res.json()) as Set;
       props.onDelete(data.id);
       dispatchForm({ type: 'ON_CLOSE' });
       onClose();

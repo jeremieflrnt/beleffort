@@ -9,12 +9,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ message: 'An error occurred.' });
     return;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (!req.body.id || !req.body.weight) {
     res.status(422).json({ message: 'Required fields are not provided.' });
     return;
   }
 
-  const { id, weight } = req.body;
+  const { id, weight } = req.body as { id: string; weight: string };
 
   if (isValidWeight(Number(weight))) {
     try {

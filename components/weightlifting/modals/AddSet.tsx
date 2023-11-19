@@ -83,7 +83,7 @@ const formReducer = (state: FormState, action: FormAction) => {
 };
 
 const UpdateSet = (props: Props) => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const [formState, dispatchForm] = useReducer(formReducer, {
     value: { reps: '', weight: '' },
@@ -113,7 +113,7 @@ const UpdateSet = (props: Props) => {
     dispatchForm({ type: 'ON_BLUR_WEIGHT', value: event.target.value });
   };
 
-  const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickClose = () => {
     dispatchForm({ type: 'ON_CLOSE' });
 
     onClose();
@@ -147,7 +147,7 @@ const UpdateSet = (props: Props) => {
         setIsLoading((prev) => {
           return !prev;
         });
-        const data = await res.json();
+        const data = (await res.json()) as Lift;
         props.onSubmit({ ...data, rep: formState.value.reps });
         dispatchForm({ type: 'ON_CLOSE' });
         onClose();
@@ -224,11 +224,3 @@ const UpdateSet = (props: Props) => {
 };
 
 export default UpdateSet;
-
-function roundToNearestIncrement(num: number, increment: number): number {
-  return Math.round(num / increment) * increment;
-}
-
-function roundToNearest(num: number, increment: number = 0.1): number {
-  return roundToNearestIncrement(num, increment);
-}

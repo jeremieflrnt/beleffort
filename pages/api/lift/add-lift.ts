@@ -2,6 +2,7 @@ import { isValidMovement, isValidReps, isValidWeight } from '@/components/weight
 import { getSessionToken } from '@/lib/utils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../lib/prisma';
+import { Set } from '@/types/Lift';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const sessionToken = getSessionToken(req);
@@ -9,12 +10,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ message: 'An error occurred.' });
     return;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (!req.body.movement || !req.body.reps || !req.body.weight) {
     res.status(422).json({ message: 'Required fields are not provided.' });
     return;
   }
 
-  const { movement, reps, weight } = req.body;
+  const { movement, reps, weight } = req.body as { movement: string; reps: Set[]; weight: number };
 
   if (isValidMovement(movement) || isValidReps(Number(reps)) || isValidWeight(Number(weight))) {
     let foundUser: {

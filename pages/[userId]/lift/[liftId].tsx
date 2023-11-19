@@ -43,8 +43,8 @@ const LiftPage = (props: Props) => {
   const handleToggleModalUpdateLift = () =>
     (document.getElementById('modal-update-lift') as HTMLDialogElement)!.showModal();
 
-  const handleDeleteLift = (data: string) => {
-    router.push(`/${router.query.userId}`);
+  const handleDeleteLift = async () => {
+    await router.push(`/${router.query.userId as string}`);
   };
 
   const handleUpdateLift = (data: Lift) => {
@@ -83,7 +83,10 @@ const LiftPage = (props: Props) => {
   const handleDeleteSet = (data: string) => {
     setLift((prev) => {
       if (prev.sets.length === 1) {
-        router.push(`/${router.query.userId}`);
+        router.push(`/${router.query.userId as string}`).then(
+          () => {},
+          () => {},
+        );
       }
       const updatedSets = prev.sets.filter((set) => set.id !== data);
       return {
@@ -224,7 +227,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   });
 
   const lift = await prisma.lift.findUnique({
-    where: { id: params!.liftId as string },
+    where: { id: params.liftId as string },
     select: {
       id: true,
       movement: true,
@@ -245,15 +248,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     if (lift.sets[0].rep === 1)
       return {
         props: {
-          lift: JSON.parse(JSON.stringify(new Lift(lift.id, lift.movement, lift.sets))),
-          oneRm: JSON.parse(JSON.stringify(lift.sets[0])),
+          lift: JSON.parse(JSON.stringify(new Lift(lift.id, lift.movement, lift.sets))) as Lift,
+          oneRm: JSON.parse(JSON.stringify(lift.sets[0])) as Set,
           user: params.userId,
         },
       };
     else
       return {
         props: {
-          lift: JSON.parse(JSON.stringify(new Lift(lift.id, lift.movement, lift.sets))),
+          lift: JSON.parse(JSON.stringify(new Lift(lift.id, lift.movement, lift.sets))) as Lift,
           user: params.userId,
         },
       };
