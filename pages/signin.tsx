@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getCsrfToken, getProviders, getSession, signIn } from 'next-auth/react';
 import Head from 'next/head';
 import { FaGithub } from 'react-icons/fa';

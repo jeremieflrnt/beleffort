@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const getSessionToken = (req: any): string => {
   let sessionToken = '';
   if (process.env.NODE_ENV === 'production' && process.env.VERCEL === '1') {

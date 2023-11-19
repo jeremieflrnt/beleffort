@@ -112,7 +112,7 @@ const formReducer = (state: FormState, action: FormAction) => {
 };
 
 const AddLift = (props: Props) => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -151,7 +151,7 @@ const AddLift = (props: Props) => {
     dispatchForm({ type: 'ON_BLUR_WEIGHT', value: event.target.value });
   };
 
-  const handleOnClickClose = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleOnClickClose = () => {
     dispatchForm({ type: 'ON_CLOSE' });
     onClose();
   };
@@ -188,9 +188,9 @@ const AddLift = (props: Props) => {
         setIsLoading((prev) => {
           return !prev;
         });
-        const data = await res.json();
+        const data = (await res.json()) as { lifts: LiftRawFromDB[] };
         const liftsWithPercentage: Lift[] = [];
-        (data.lifts as LiftRawFromDB[]).forEach((lift) => {
+        data.lifts.forEach((lift) => {
           liftsWithPercentage.push(new Lift(lift.id, lift.movement, lift.sets));
         });
         props.onSubmit(liftsWithPercentage);

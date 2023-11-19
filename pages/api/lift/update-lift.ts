@@ -10,15 +10,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ message: 'An error occurred.' });
     return;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (!req.body.id || !req.body.movement) {
     res.status(422).json({ message: 'Required fields are not provided.' });
     return;
   }
 
-  const { id, movement } = req.body;
+  const { id, movement } = req.body as { id: string; movement: string };
   if (isValidMovement(movement)) {
     try {
-      const foundLift = await prisma.session.findFirstOrThrow({
+      await prisma.session.findFirstOrThrow({
         where: {
           sessionToken: sessionToken,
           user: {

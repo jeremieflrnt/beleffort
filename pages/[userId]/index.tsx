@@ -8,7 +8,11 @@ import { useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import prisma from '../../lib/prisma';
 
-const UserPage = (props: any) => {
+type Props = {
+  lifts: Lift[];
+};
+
+const UserPage = (props: Props) => {
   const handleToggle = () => (document.getElementById('modal-add-lift') as HTMLDialogElement)!.showModal();
 
   const [lifts, setLifts] = useState(props.lifts);
@@ -83,6 +87,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   });
 
   return {
-    props: { lifts: JSON.parse(JSON.stringify(lifts)) },
+    props: { lifts: JSON.parse(JSON.stringify(lifts)) as Lift[] },
   };
 }

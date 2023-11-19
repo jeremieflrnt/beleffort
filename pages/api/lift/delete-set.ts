@@ -8,12 +8,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ message: 'An error occurred.' });
     return;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (!req.body.id) {
     res.status(422).json({ message: 'Required fields are not provided.' });
     return;
   }
 
-  const { id } = req.body;
+  const { id } = req.body as { id: string };
 
   try {
     const set = await prisma.set.delete({
