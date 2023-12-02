@@ -1,9 +1,10 @@
 import { ReporterDescription, defineConfig, devices } from '@playwright/test';
 import fs from 'fs';
-import { PW_AUTH_FILE } from './tests/auth.setup';
+
+export const PW_AUTH_FILE = '.auth/user.json';
 
 const getBaseUrl = (): string => {
-  return process.env.ENVIRONMENT === 'production' ? 'https://beleffort.vercel.app' : 'http://localhost:3000';
+  return process.env.ENVIRONMENT === 'production' ? 'https://beleffort.app' : 'http://localhost:3000';
 };
 
 const getReportersList = (): ReporterDescription[] => {
@@ -67,6 +68,7 @@ export default defineConfig({
         storageState: PW_AUTH_FILE,
         // viewport default for device 'Desktop x': 1280x720. See https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json
       },
+      dependencies: !fs.existsSync(PW_AUTH_FILE) ? ['setup'] : [],
     },
     {
       name: 'firefox', // https://yesviz.com/devices/macbookpro-16-2019/
@@ -88,7 +90,7 @@ export default defineConfig({
         deviceScaleFactor: 2,
         storageState: PW_AUTH_FILE,
       },
-      dependencies: !fs.existsSync(PW_AUTH_FILE) ? ['setup'] : [],
+      // dependencies: !fs.existsSync(PW_AUTH_FILE) ? ['setup'] : [],
     },
     {
       name: 'iPhone 13 Pro',

@@ -3,7 +3,6 @@ import { test, expect } from '@playwright/test';
 test.describe('Tests', () => {
   test('First test', async ({ page }) => {
     await page.goto('/');
-    console.log('[test] Cookies', await page.context().cookies());
     console.log('[test] Storage', await page.context().storageState());
     await expect(
       page.getByText(

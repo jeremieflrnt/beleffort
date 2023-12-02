@@ -1,0 +1,35 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [main, master, feat/github-actions-playwright]
+  pull_request:
+    branches: [main, master]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.40.0-jammy
+    defaults:
+      run:
+        working-directory: ./playwright
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright
+        run: PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install --with-deps
+      - name: Run your tests
+        run: PLAYWRIGHT_BROWSERS_PATH=node_modules/playwright-core/.local-browsers npx playwright test
+        env:
+          HOME: /root
+          ENVIRONMENT: production
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: out-report
+          path: out/report/
+          retention-days: 30
